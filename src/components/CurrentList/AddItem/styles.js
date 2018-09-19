@@ -18,12 +18,13 @@ export const InputText = styled.input`
 `;
 
 export const InputNumber = styled.input`
+  padding-right: 1px;
   font-size: 24px;
   height: 36px;
   box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.75);
-  width: 10%;
+  width: 11%;
   border: 1px solid #000;
-  text-align: center;
+  text-align: right;
 `;
 
 export const Button = styled.div`
