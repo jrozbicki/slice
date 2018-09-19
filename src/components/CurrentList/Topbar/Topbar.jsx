@@ -5,14 +5,16 @@ import firebase from "../../../firebase";
 import { Title, Button } from "./styles";
 class Topbar extends Component {
   handleClick = () => {
+    let updates = {};
     this.props.checkedOutItems.map(id => {
-      firebase
-        .database()
-        .ref("/currentList")
-        .child(id)
-        .remove();
-      return console.log("Removing successfull of", id);
+      return (updates[id] = null);
     });
+    firebase
+      .database()
+      .ref("/currentList")
+      .update(updates)
+      .then(() => console.log("Removing checkout items with one API call"))
+      .catch(err => err.message);
   };
 
   render() {

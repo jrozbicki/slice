@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { addCheckedOutItem, removeCheckedOutItem } from "../../../../actions";
+import firebase from "../../../../firebase";
 
 import {
   ListItem,
   ItemName,
   CheckboxContainer,
   Checkbox,
-  ItemQuantity
+  ItemQuantity,
+  TrashContainer
 } from "./styles";
 
 class SingleItem extends Component {
@@ -17,7 +19,7 @@ class SingleItem extends Component {
     this.state = { display: "none", hover: ":hover" };
   }
 
-  handleClick = () => {
+  handleCheckoutClick = () => {
     if (this.state.display === "none") {
       this.setState({ display: "block", hover: "" });
       this.props.addCheckedOutItem(this.props.id);
@@ -27,17 +29,34 @@ class SingleItem extends Component {
     }
   };
 
+  handleTrashClick = () => {
+    firebase
+      .database()
+      .ref("/currentList")
+      .child(this.props.id)
+      .remove();
+  };
+
   render() {
     return (
-      <ListItem id={this.props.id}>
-        <ItemName hover={this.state.hover}>
+      <ListItem id={this.props.id} hover={this.state.hover}>
+        <ItemName>
           {this.props.name}
           <CheckboxContainer>
             <input type="checkbox" />
-            <Checkbox onClick={this.handleClick} display={this.state.display} />
+            <Checkbox
+              onClick={this.handleCheckoutClick}
+              display={this.state.display}
+            />
           </CheckboxContainer>
         </ItemName>
         <ItemQuantity>{this.props.quantity}</ItemQuantity>
+        <TrashContainer>
+          <i
+            className="fas fa-trash-alt fa-2x"
+            onClick={this.handleTrashClick}
+          />
+        </TrashContainer>
       </ListItem>
     );
   }

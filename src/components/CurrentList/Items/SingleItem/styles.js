@@ -1,10 +1,5 @@
 import styled from "styled-components";
 
-export const ListItem = styled.div`
-  grid-column: 2/3;
-  display: flex;
-`;
-
 export const CheckboxContainer = styled.div`
   position: absolute;
   top: 0;
@@ -17,6 +12,32 @@ export const CheckboxContainer = styled.div`
 
   & input[type="checkbox"] {
     display: none;
+  }
+`;
+
+export const TrashContainer = styled.div`
+  grid-column: 3/4;
+  margin: auto 0px;
+  overflow: hidden;
+  color: red;
+
+  & i {
+    transform: translate(-100%, 0%);
+    transition: transform 0.3s ease;
+  }
+`;
+
+export const ListItem = styled.div`
+  position: relative;
+  grid-column: 2/4;
+  display: grid;
+  grid-template-columns: 7fr 1fr 1fr;
+
+  &${props => props.hover} ${CheckboxContainer} {
+    width: 36px;
+  }
+  &:hover ${TrashContainer} i {
+    transform: translate(30%, 0%);
   }
 `;
 
@@ -49,27 +70,25 @@ export const Checkbox = styled.span`
 `;
 
 export const ItemName = styled.div`
+  grid-column: 1/2;
   position: relative;
   font-size: 24px;
   padding: 5px 0px;
   box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.75);
-  width: 87%;
+  width: 100%;
   border: 1px solid #000;
   text-align: center;
   background-color: #e0e0e0;
-
-  &${props => props.hover} ${CheckboxContainer} {
-    width: 36px;
-  }
 `;
 
 export const ItemQuantity = styled.div`
+  grid-column: 2/3;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 24px;
   height: 36px;
   box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.75);
-  width: 12%;
+  width: 100%;
   border: 1px solid #000;
 `;
