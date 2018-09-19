@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { addCheckedOutItem, removeCheckedOutItem } from "../../../../actions";
+
 import {
   ListItem,
   ItemName,
@@ -17,8 +20,10 @@ class SingleItem extends Component {
   handleClick = () => {
     if (this.state.display === "none") {
       this.setState({ display: "block", hover: "" });
+      this.props.addCheckedOutItem(this.props.id);
     } else {
       this.setState({ display: "none", hover: ":hover" });
+      this.props.removeCheckedOutItem(this.props.id);
     }
   };
 
@@ -38,4 +43,7 @@ class SingleItem extends Component {
   }
 }
 
-export default SingleItem;
+export default connect(
+  null,
+  { addCheckedOutItem, removeCheckedOutItem }
+)(SingleItem);

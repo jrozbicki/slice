@@ -22,7 +22,7 @@ class AddItem extends Component {
         .database()
         .ref("/currentList")
         .push(item)
-        .then(() => alert("Addition successfull"))
+        .then(() => console.log("Addition successfull"))
         .catch(err => err.message);
     } else {
       //TODO: poprawić walidacje
