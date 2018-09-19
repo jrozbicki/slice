@@ -46,10 +46,6 @@ export const Checkbox = styled.span`
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
   }
-
-  &:active &:after {
-    display: block;
-  }
 `;
 
 export const ItemName = styled.div`
@@ -62,7 +58,7 @@ export const ItemName = styled.div`
   text-align: center;
   background-color: #e0e0e0;
 
-  &:hover ${CheckboxContainer} {
+  &${props => props.hover} ${CheckboxContainer} {
     width: 36px;
   }
 `;

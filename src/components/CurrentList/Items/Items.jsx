@@ -1,13 +1,7 @@
 import React, { Component, Fragment } from "react";
 import firebase from "../../../firebase";
 
-import {
-  ListItem,
-  ItemName,
-  CheckboxContainer,
-  Checkbox,
-  ItemQuantity
-} from "./styles";
+import SingleItem from "./SingleItem/SingleItem";
 
 class Items extends Component {
   constructor(props) {
@@ -32,22 +26,9 @@ class Items extends Component {
       });
   }
 
-  handleSelectCheckbox = () => {};
-
   renderItems = () => {
     return this.state.items.map(({ id, name, quantity }) => {
-      return (
-        <ListItem key={id}>
-          <ItemName>
-            {name}
-            <CheckboxContainer>
-              <input type="checkbox" />
-              <Checkbox display="none" />
-            </CheckboxContainer>
-          </ItemName>
-          <ItemQuantity>{quantity}</ItemQuantity>
-        </ListItem>
-      );
+      return <SingleItem key={id} id={id} name={name} quantity={quantity} />;
     });
   };
 
