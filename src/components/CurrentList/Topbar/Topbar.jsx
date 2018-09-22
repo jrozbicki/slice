@@ -13,7 +13,6 @@ class Topbar extends Component {
       .database()
       .ref("/currentList")
       .update(updates)
-      .then(() => console.log("Removing checkout items with one API call"))
       .catch(err => err.message);
   };
 
