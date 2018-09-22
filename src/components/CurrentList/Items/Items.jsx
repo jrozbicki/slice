@@ -32,7 +32,6 @@ class Items extends Component {
   }
 
   renderItems = () => {
-    console.log(this.state.items);
     if (this.state.items.length) {
       return this.state.items.map(({ id, name, quantity }) => {
         return <SingleItem key={id} id={id} name={name} quantity={quantity} />;

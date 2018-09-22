@@ -2,12 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { applyMiddleware, createStore } from "redux";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import "./styles/style.css";
 import registerServiceWorker from "./registerServiceWorker";
 import reducers from "./reducers";
 import Dashboard from "./views/Dashboard/Dashboard";
+import Login from "./views/Login/Login";
+import requireAuth from "./components/HOC/RequireAuth/requireAuth";
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
 
@@ -21,7 +23,15 @@ ReactDOM.render(
   >
     <BrowserRouter>
       <Switch>
-        <Route path="/dashboard" component={Dashboard} />
+        <Route exact path="/dashboard" component={requireAuth(Dashboard)} />
+        <Route exact path="/login" component={Login} />
+        <Route
+          exact
+          path="/"
+          render={() => {
+            return <Redirect to="/login" />;
+          }}
+        />
       </Switch>
     </BrowserRouter>
   </Provider>,
