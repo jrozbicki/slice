@@ -15,6 +15,9 @@ const styles = {
   root: {
     flexGrow: 1
   },
+  toolbar: {
+    justifyContent: "space-between"
+  },
   formControl: {
     minWidth: 120
   },
@@ -36,7 +39,7 @@ class Navbar extends Component {
     return (
       <div>
         <AppBar position="static" color="primary">
-          <Toolbar>
+          <Toolbar className={classes.toolbar}>
             <IconButton
               className={classes.menuButton}
               color="inherit"

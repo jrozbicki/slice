@@ -23,8 +23,8 @@ ReactDOM.render(
   >
     <BrowserRouter>
       <Switch>
-        <Route exact path="/dashboard" component={requireAuth(Dashboard)} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/:uid" component={requireAuth(Dashboard)} />
         <Route
           exact
           path="/"

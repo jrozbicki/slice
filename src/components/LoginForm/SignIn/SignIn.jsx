@@ -54,6 +54,10 @@ class SignIn extends Component {
     this.state = { email: "", password: "" };
   }
 
+  pushUserAfterAuth = uid => {
+    this.props.history.push(`/${uid}`);
+  };
+
   handleSignIn = () => {
     firebase
       .auth()
@@ -64,7 +68,7 @@ class SignIn extends Component {
       if (user) {
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("userData", JSON.stringify(user));
-        this.props.history.push("/dashboard");
+        this.pushUserAfterAuth(user.uid);
       }
     });
 
@@ -94,7 +98,7 @@ class SignIn extends Component {
             }
           });
 
-        this.props.history.push("/dashboard");
+        this.pushUserAfterAuth(user.uid);
       }
     });
 
