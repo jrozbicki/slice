@@ -109,7 +109,9 @@ class Navbar extends Component {
               { keepMounted: true } // Better open performance on mobile.
             }
           >
-            <DrawerMenu />
+            <DrawerMenu
+              userData={JSON.parse(localStorage.getItem("userData"))}
+            />
           </Drawer>
         </Hidden>
         <Hidden smDown implementation="css">
