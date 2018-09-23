@@ -1,75 +1,76 @@
 import React, { Component } from "react";
+import { withStyles } from "@material-ui/core";
 import firebase from "../../firebase";
+import DrawerMenu from "./DrawerMenu";
 
-import { withStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import Button from "@material-ui/core/Button";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Hidden,
+  Drawer,
+  SwipeableDrawer
+} from "@material-ui/core";
 
-const styles = {
+import { Menu } from "@material-ui/icons";
+
+const drawerWidth = 240;
+
+const styles = theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    height: 440,
+    zIndex: 1,
+    overflow: "hidden",
+    position: "relative",
+    display: "flex",
+    width: "100%"
   },
-  toolbar: {
+  appBar: {
+    position: "absolute",
+    zIndex: theme.zIndex.drawer + 1
+  },
+  navIconHide: {
+    [theme.breakpoints.up("md")]: {
+      display: "none"
+    }
+  },
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    width: drawerWidth,
+    [theme.breakpoints.up("md")]: {
+      position: "relative"
+    }
+  },
+  content: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing.unit * 3
+  },
+  flex: {
     justifyContent: "space-between"
   },
   formControl: {
     minWidth: 120
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
   }
-};
+});
 
 class Navbar extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    mobileOpen: false,
+    left: false
+  };
 
-    this.state = { selectedEvent: "" };
-  }
+  toggleDrawer = open => () => {
+    this.setState({
+      left: open
+    });
+  };
 
-  render() {
-    const { classes } = this.props;
-    return (
-      <div>
-        <AppBar position="static" color="primary">
-          <Toolbar className={classes.toolbar}>
-            <IconButton
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="Menu"
-            >
-              <MenuIcon />
-            </IconButton>
-            <form autoComplete="off">
-              <FormControl className={classes.formControl}>
-                <Select
-                  className={classes.select}
-                  value={this.state.selectedEvent}
-                  onChange={event =>
-                    this.setState({ [event.target.name]: event.target.value })
-                  }
-                  inputProps={{ name: "selectedEvent" }}
-                >
-                  <MenuItem value={"plZgody"}>pl. Zgody</MenuItem>
-                  <MenuItem value={"Wroclaw"}>Wroclaw</MenuItem>
-                </Select>
-              </FormControl>
-            </form>
-            <Button color="inherit" onClick={this.handleLogOut}>
-              Logout
-            </Button>
-          </Toolbar>
-        </AppBar>
-      </div>
-    );
-  }
+  handleDrawerToggle = () => {
+    this.setState(state => ({ mobileOpen: !state.mobileOpen }));
+  };
 
   handleLogOut = () => {
     firebase.auth().signOut();
@@ -77,6 +78,58 @@ class Navbar extends Component {
     localStorage.setItem("userData", null);
     this.props.history.push("/login");
   };
+
+  render() {
+    const { classes, children } = this.props;
+
+    return (
+      <div className={classes.root}>
+        <AppBar className={classes.appBar}>
+          <Toolbar className={classes.flex}>
+            <IconButton
+              onClick={this.handleDrawerToggle}
+              color="inherit"
+              aria-label="Open drawer"
+              className={classes.navIconHide}
+            >
+              <Menu />
+            </IconButton>
+            <Typography variant="title" color="inherit" noWrap>
+              Slice
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Hidden mdUp>
+          <Drawer
+            variant="temporary"
+            open={this.state.mobileOpen}
+            onClose={this.handleDrawerToggle}
+            classes={{ paper: classes.drawerPaper }}
+            ModalProps={
+              { keepMounted: true } // Better open performance on mobile.
+            }
+          >
+            <DrawerMenu />
+          </Drawer>
+        </Hidden>
+        <Hidden smDown implementation="css">
+          <SwipeableDrawer
+            open={this.state.left}
+            onClose={this.toggleDrawer(false)}
+            onOpen={this.toggleDrawer(true)}
+            variant="permanent"
+            classes={{ paper: classes.drawerPaper }}
+          >
+            <DrawerMenu />
+          </SwipeableDrawer>
+        </Hidden>
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          {children}
+        </main>
+      </div>
+    );
+  }
 }
 
 export default withStyles(styles)(Navbar);

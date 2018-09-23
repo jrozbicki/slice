@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from "react";
 
-import CurrentList from "../../components/CurrentList/CurrentList";
+import Event from "../../components/Event/Event";
 import Navbar from "../../components/Navbar/Navbar";
+import CurrentList from "../../components/CurrentList/CurrentList";
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -11,8 +12,9 @@ class Dashboard extends Component {
   render() {
     return (
       <Fragment>
-        <Navbar history={this.props.history} />
-        <CurrentList />
+        <Navbar history={this.props.history}>
+          <Event />
+        </Navbar>
       </Fragment>
     );
   }

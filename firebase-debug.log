@@ -1,0 +1,110 @@
+[debug] [2018-09-22T17:04:15.958Z] ----------------------------------------------------------------------
+[debug] [2018-09-22T17:04:15.962Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Kuba\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy
+[debug] [2018-09-22T17:04:15.963Z] CLI Version:   4.2.1
+[debug] [2018-09-22T17:04:15.963Z] Platform:      win32
+[debug] [2018-09-22T17:04:15.963Z] Node Version:  v8.11.3
+[debug] [2018-09-22T17:04:15.964Z] Time:          Sat Sep 22 2018 19:04:15 GMT+0200 (Środkowoeuropejski czas letni)
+[debug] [2018-09-22T17:04:15.964Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-09-22T17:04:15.983Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-09-22T17:04:15.984Z] > authorizing via signed-in user
+[debug] [2018-09-22T17:04:15.988Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/slice-jrz  
+ 
+[info] 
+[warn] !  Your CLI authentication needs to be updated to take advantage of new features.
+[warn] !  Please run firebase login --reauth
+[info] 
+[debug] [2018-09-22T17:04:37.146Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase"]
+[debug] [2018-09-22T17:04:37.147Z] > authorizing via signed-in user
+[debug] [2018-09-22T17:04:37.147Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-09-22T17:04:37.148Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+
+[debug] [2018-09-22T17:04:46.550Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-22T17:04:46.558Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/slice-jrz  
+ 
+[debug] [2018-09-22T17:04:47.334Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'slice-jrz'...
+[info] 
+[info] i  deploying database, hosting
+[info] i  database: checking rules syntax...
+[debug] [2018-09-22T17:04:47.346Z] >>> HTTP REQUEST PUT https://slice-jrz.firebaseio.com/.settings/rules.json?dryRun=true  
+ {
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null"
+  }
+}
+[debug] [2018-09-22T17:05:08.696Z] Error: connect ETIMEDOUT 35.201.97.85:443
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+[error] 
+[error] Error: Server Error. connect ETIMEDOUT 35.201.97.85:443
+[debug] [2018-09-22T17:05:26.235Z] ----------------------------------------------------------------------
+[debug] [2018-09-22T17:05:26.239Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Kuba\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy
+[debug] [2018-09-22T17:05:26.240Z] CLI Version:   4.2.1
+[debug] [2018-09-22T17:05:26.240Z] Platform:      win32
+[debug] [2018-09-22T17:05:26.240Z] Node Version:  v8.11.3
+[debug] [2018-09-22T17:05:26.241Z] Time:          Sat Sep 22 2018 19:05:26 GMT+0200 (Środkowoeuropejski czas letni)
+[debug] [2018-09-22T17:05:26.241Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-09-22T17:05:26.260Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-09-22T17:05:26.260Z] > authorizing via signed-in user
+[debug] [2018-09-22T17:05:26.263Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-09-22T17:05:26.263Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+
+[info] 
+[warn] !  Your CLI authentication needs to be updated to take advantage of new features.
+[warn] !  Please run firebase login --reauth
+[info] 
+[debug] [2018-09-22T17:05:47.350Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase"]
+[debug] [2018-09-22T17:05:47.351Z] > authorizing via signed-in user
+[debug] [2018-09-22T17:05:47.352Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/slice-jrz  
+ 
+[debug] [2018-09-22T17:06:29.383Z] Error: connect ETIMEDOUT 104.197.85.31:443
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+[error] 
+[error] Error: Server Error. connect ETIMEDOUT 104.197.85.31:443
+[debug] [2018-09-22T17:11:37.192Z] ----------------------------------------------------------------------
+[debug] [2018-09-22T17:11:37.196Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Kuba\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy
+[debug] [2018-09-22T17:11:37.196Z] CLI Version:   4.2.1
+[debug] [2018-09-22T17:11:37.196Z] Platform:      win32
+[debug] [2018-09-22T17:11:37.196Z] Node Version:  v8.11.3
+[debug] [2018-09-22T17:11:37.198Z] Time:          Sat Sep 22 2018 19:11:37 GMT+0200 (Środkowoeuropejski czas letni)
+[debug] [2018-09-22T17:11:37.198Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-09-22T17:11:37.215Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-09-22T17:11:37.216Z] > authorizing via signed-in user
+[debug] [2018-09-22T17:11:37.219Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-09-22T17:11:37.219Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+
+[info] 
+[warn] !  Your CLI authentication needs to be updated to take advantage of new features.
+[warn] !  Please run firebase login --reauth
+[info] 
+[debug] [2018-09-22T17:11:58.302Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase"]
+[debug] [2018-09-22T17:11:58.303Z] > authorizing via signed-in user
+[debug] [2018-09-22T17:11:58.304Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/slice-jrz  
+ 
+[debug] [2018-09-22T17:11:59.157Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'slice-jrz'...
+[info] 
+[info] i  deploying database, hosting
+[info] i  database: checking rules syntax...
+[debug] [2018-09-22T17:11:59.167Z] >>> HTTP REQUEST PUT https://slice-jrz.firebaseio.com/.settings/rules.json?dryRun=true  
+ {
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null"
+  }
+}
+[debug] [2018-09-22T17:12:21.055Z] Error: connect ETIMEDOUT 35.201.97.85:443
+    at Object._errnoException (util.js:992:11)
+    at _exceptionWithHostPort (util.js:1014:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1186:14)
+[error] 
+[error] Error: Server Error. connect ETIMEDOUT 35.201.97.85:443
