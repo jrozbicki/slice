@@ -2,8 +2,8 @@ import React from "react";
 import LoginForm from "../../components/LoginForm/LoginForm";
 
 const Login = ({ history }) => {
-  if (localStorage.isLoggedIn === "true") {
-    history.push(`/${localStorage.getItem("userData").uid}`);
+  if (sessionStorage.getItem("isLoggedIn") === "true") {
+    history.push("/");
     return null;
   } else {
     return <LoginForm />;

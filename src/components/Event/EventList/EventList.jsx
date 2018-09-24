@@ -1,4 +1,7 @@
 import React from "react";
+import { compose } from "recompose";
+import { connect } from "react-redux";
+
 import {
   Card,
   CardContent,
@@ -10,10 +13,15 @@ import {
   TextField,
   DialogActions,
   Button,
+  List,
+  ListItem,
+  Checkbox,
+  ListItemSecondaryAction,
+  IconButton,
   withStyles
 } from "@material-ui/core";
 
-import { Add } from "@material-ui/icons";
+import { Add, Comment } from "@material-ui/icons";
 
 const styles = theme => ({
   cardActions: {
@@ -51,6 +59,27 @@ class Event extends React.Component {
     this.setState({ dialogOpen: false, itemName: "", itemQuantity: 1 });
   };
 
+  renderList = () => {
+    if (this.props.eventData.list) {
+      return Object.entries(this.props.eventData.list).map(item => {
+        console.log("renderingListitem", item);
+        return (
+          <ListItem key={item[0]} dense button>
+            <Checkbox tabIndex={-1} disableRipple />
+            <Typography variant="subheading">{`${item[1].name} x ${
+              item[1].quantity
+            }`}</Typography>
+            <ListItemSecondaryAction>
+              <IconButton aria-label="Comments">
+                <Comment />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+        );
+      });
+    }
+  };
+
   render() {
     const { classes } = this.props;
     return (
@@ -58,14 +87,9 @@ class Event extends React.Component {
         <Card>
           <CardContent>
             <Typography variant="headline" className={classes.cardTitle}>
-              pl. Zgody
+              {this.props.eventData.name}
             </Typography>
-            <ul>
-              <li>1</li>
-              <li>2</li>
-              <li>3</li>
-              <li>4</li>
-            </ul>
+            <List>{this.renderList()}</List>
           </CardContent>
           <CardActions className={classes.cardActions}>
             <Button
@@ -127,4 +151,13 @@ class Event extends React.Component {
   }
 }
 
-export default withStyles(styles)(Event);
+const mapStateToProps = state => {
+  return {
+    eventData: state.eventData
+  };
+};
+
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps)
+)(Event);

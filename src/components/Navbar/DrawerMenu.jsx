@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import firebase from "../../firebase";
 import { withRouter } from "react-router-dom";
+import { compose } from "recompose";
+import { connect } from "react-redux";
+
+import { selectedEventData } from "../../actions";
 
 import {
   ListItem,
@@ -32,25 +36,18 @@ const styles = theme => ({
 });
 
 class DrawerMenu extends Component {
-  state = {
-    eventsOpen: false,
-    events: []
-  };
+  constructor(props) {
+    super(props);
 
-  componentDidMount() {
-    firebase
-      .database()
-      .ref(`/users/${JSON.parse(localStorage.getItem("userData")).uid}/events`)
-      .on("value", snap => {
-        this.setState({ events: snap.val() });
-      });
+    this.state = {
+      eventsOpen: false
+    };
   }
 
   handleLogOut = () => {
     firebase.auth().signOut();
-    localStorage.setItem("isLoggedIn", false);
-    localStorage.setItem("userData", null);
-    this.props.history.push("/login");
+    sessionStorage.clear();
+    this.props.history.replace("/login");
   };
 
   handleEventNestedList = () => {
@@ -59,12 +56,23 @@ class DrawerMenu extends Component {
       : this.setState({ eventsOpen: true });
   };
 
+  loadEvent = e => {
+    this.props.selectedEventData(e.currentTarget.id);
+    this.props.closeDrawer();
+  };
+
   renderEvents = classes => {
-    if (this.state.events) {
-      const arrayEvents = Object.entries(this.state.events);
+    if (this.props.events !== undefined && this.props.events !== null) {
+      const arrayEvents = Object.entries(this.props.events);
       return arrayEvents.map(arr => {
         return (
-          <ListItem button key={arr[0]} className={classes.nested}>
+          <ListItem
+            button
+            key={arr[0]}
+            id={arr[0]}
+            className={classes.nested}
+            onClick={this.loadEvent}
+          >
             <ListItemIcon>
               <Star />
             </ListItemIcon>
@@ -76,8 +84,7 @@ class DrawerMenu extends Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const userData = JSON.parse(localStorage.getItem("userData"));
+    const { classes, userData } = this.props;
     return (
       <div>
         <Hidden smDown>
@@ -87,11 +94,9 @@ class DrawerMenu extends Component {
         <List>
           <ListItem>
             <Avatar>
-              {userData.photoUrl
-                ? userData.photoUrl
-                : userData.email.substr(0, 1).toUpperCase()}
+              {userData.email ? userData.email.substr(0, 1).toUpperCase() : ""}
             </Avatar>
-            <ListItemText primary={userData.email} />
+            <ListItemText primary={userData.email ? userData.email : ""} />
           </ListItem>
         </List>
 
@@ -105,7 +110,7 @@ class DrawerMenu extends Component {
             <ListItemText inset primary="Events" />
             {this.state.eventsOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
-          <Collapse in={this.state.eventsOpen} timeoute="auto" unmountOnExit>
+          <Collapse in={this.state.eventsOpen} timeoute="auto">
             <List>{this.renderEvents(classes)}</List>
             <List>
               <ListItem button>
@@ -141,4 +146,15 @@ class DrawerMenu extends Component {
   }
 }
 
-export default withStyles(styles)(withRouter(DrawerMenu));
+const mapStateToProps = state => {
+  return { userData: state.currentUserData, events: state.currentUserEvents };
+};
+
+export default compose(
+  withStyles(styles),
+  withRouter,
+  connect(
+    mapStateToProps,
+    { selectedEventData }
+  )
+)(DrawerMenu);

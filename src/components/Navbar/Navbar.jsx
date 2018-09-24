@@ -74,8 +74,8 @@ class Navbar extends Component {
 
   handleLogOut = () => {
     firebase.auth().signOut();
-    localStorage.setItem("isLoggedIn", false);
-    localStorage.setItem("userData", null);
+    sessionStorage.setItem("isLoggedIn", false);
+    sessionStorage.setItem("userData", null);
     this.props.history.push("/login");
   };
 
@@ -87,9 +87,9 @@ class Navbar extends Component {
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.flex}>
             <IconButton
-              onClick={this.handleDrawerToggle}
               color="inherit"
               aria-label="Open drawer"
+              onClick={this.handleDrawerToggle}
               className={classes.navIconHide}
             >
               <Menu />
@@ -100,31 +100,36 @@ class Navbar extends Component {
           </Toolbar>
         </AppBar>
         <Hidden mdUp>
-          <Drawer
+          <SwipeableDrawer
             variant="temporary"
             open={this.state.mobileOpen}
             onClose={this.handleDrawerToggle}
+            onOpen={this.toggleDrawer(true)}
             classes={{ paper: classes.drawerPaper }}
             ModalProps={
               { keepMounted: true } // Better open performance on mobile.
             }
           >
-            <DrawerMenu
-              userData={JSON.parse(localStorage.getItem("userData"))}
-            />
-          </Drawer>
-        </Hidden>
-        <Hidden smDown implementation="css">
-          <SwipeableDrawer
-            open={this.state.left}
-            onClose={this.toggleDrawer(false)}
-            onOpen={this.toggleDrawer(true)}
-            variant="permanent"
-            classes={{ paper: classes.drawerPaper }}
+          <div
+            tabIndex={0}
+            role="button"
+            onClick={this.toggleDrawer(false)}
+            onKeyDown={this.toggleDrawer(false)}
           >
-            <DrawerMenu />
+            <DrawerMenu closeDrawer={this.handleDrawerToggle} />
+            </div>
           </SwipeableDrawer>
         </Hidden>
+        <Hidden smDown implementation="css">
+          <Drawer
+            variant="permanent"
+            open
+            classes={{ paper: classes.drawerPaper }}
+          >
+            <DrawerMenu closeDrawer={this.handleDrawerToggle} />
+          </Drawer>
+        </Hidden>
+
         <main className={classes.content}>
           <div className={classes.toolbar} />
           {children}

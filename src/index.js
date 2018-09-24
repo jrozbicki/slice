@@ -10,8 +10,9 @@ import reducers from "./reducers";
 import Dashboard from "./views/Dashboard/Dashboard";
 import Login from "./views/Login/Login";
 import requireAuth from "./components/HOC/RequireAuth/requireAuth";
-
-const createStoreWithMiddleware = applyMiddleware()(createStore);
+import thunk from "redux-thunk";
+import logger from "redux-logger";
+const createStoreWithMiddleware = applyMiddleware(thunk, logger)(createStore);
 
 ReactDOM.render(
   <Provider
@@ -24,7 +25,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Switch>
         <Route exact path="/login" component={Login} />
-        <Route exact path="/:uid" component={requireAuth(Dashboard)} />
+        <Route exact path="/" component={requireAuth(Dashboard)} />
         <Route
           exact
           path="/"

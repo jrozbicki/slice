@@ -1,10 +1,16 @@
 import React, { Component, Fragment } from "react";
-
-import EventList from "../../components/EventList/EventList";
+import { connect } from "react-redux";
+import EventList from "../../components/Event/EventList/EventList";
 import Navbar from "../../components/Navbar/Navbar";
-import CurrentList from "../../components/CurrentList/CurrentList";
+import { currentUserData, currentUserEvents } from "../../actions";
 
 class Dashboard extends Component {
+  componentDidMount() {
+    const userData = JSON.parse(sessionStorage.getItem("userData"));
+    this.props.currentUserData(userData);
+    this.props.currentUserEvents(userData.uid);
+  }
+
   render() {
     return (
       <Fragment>
@@ -16,4 +22,7 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+export default connect(
+  null,
+  { currentUserData, currentUserEvents }
+)(Dashboard);
