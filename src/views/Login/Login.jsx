@@ -6,7 +6,7 @@ const Login = ({ history }) => {
     history.push("/");
     return null;
   } else {
-    return <LoginForm />;
+    return <LoginForm history={history} />;
   }
 };
 
