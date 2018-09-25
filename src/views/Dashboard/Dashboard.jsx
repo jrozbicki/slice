@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import EventList from "../../components/Event/EventList/EventList";
+import Event from "../../components/Event/Event";
 import Navbar from "../../components/Navbar/Navbar";
 import { currentUserData, currentUserEvents } from "../../actions";
 
@@ -15,7 +15,7 @@ class Dashboard extends Component {
     return (
       <Fragment>
         <Navbar history={this.props.history}>
-          <EventList />
+          <Event />
         </Navbar>
       </Fragment>
     );

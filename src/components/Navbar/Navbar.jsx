@@ -20,9 +20,9 @@ const drawerWidth = 240;
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: 440,
+    height: "100vh",
     zIndex: 1,
-    overflow: "hidden",
+    overflowX: "hidden",
     position: "relative",
     display: "flex",
     width: "100%"
@@ -110,13 +110,13 @@ class Navbar extends Component {
               { keepMounted: true } // Better open performance on mobile.
             }
           >
-          <div
-            tabIndex={0}
-            role="button"
-            onClick={this.toggleDrawer(false)}
-            onKeyDown={this.toggleDrawer(false)}
-          >
-            <DrawerMenu closeDrawer={this.handleDrawerToggle} />
+            <div
+              tabIndex={0}
+              role="button"
+              onClick={this.toggleDrawer(false)}
+              onKeyDown={this.toggleDrawer(false)}
+            >
+              <DrawerMenu closeDrawer={this.handleDrawerToggle} />
             </div>
           </SwipeableDrawer>
         </Hidden>

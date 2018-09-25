@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 
-import { selectedEventData } from "../../actions";
+import { selectedEventData, userLogout } from "../../actions";
 
 import {
   ListItem,
@@ -47,6 +47,7 @@ class DrawerMenu extends Component {
   handleLogOut = () => {
     firebase.auth().signOut();
     sessionStorage.clear();
+    this.props.userLogout();
     this.props.history.replace("/login");
   };
 
@@ -61,7 +62,7 @@ class DrawerMenu extends Component {
     this.props.closeDrawer();
   };
 
-  renderEvents = classes => {
+  renderEvents = () => {
     if (this.props.events !== undefined && this.props.events !== null) {
       const arrayEvents = Object.entries(this.props.events);
       return arrayEvents.map(arr => {
@@ -70,7 +71,7 @@ class DrawerMenu extends Component {
             button
             key={arr[0]}
             id={arr[0]}
-            className={classes.nested}
+            className={this.props.classes.nested}
             onClick={this.loadEvent}
           >
             <ListItemIcon>
@@ -111,7 +112,7 @@ class DrawerMenu extends Component {
             {this.state.eventsOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
           <Collapse in={this.state.eventsOpen} timeoute="auto">
-            <List>{this.renderEvents(classes)}</List>
+            <List>{this.renderEvents()}</List>
             <List>
               <ListItem button>
                 <ListItemIcon>
@@ -155,6 +156,6 @@ export default compose(
   withRouter,
   connect(
     mapStateToProps,
-    { selectedEventData }
+    { selectedEventData, userLogout }
   )
 )(DrawerMenu);

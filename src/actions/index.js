@@ -5,6 +5,7 @@ export const REMOVE_CHECKEDOUT_ITEM = "REMOVE_CHECKEDOUT_ITEM";
 export const CURRENT_USER_DATA = "CURRENT_USER_DATA";
 export const CURRENT_USER_EVENTS = "CURRENT_USER_EVENTS";
 export const SELECTED_EVENT_DATA = "SELECTED_EVENT_DATA";
+export const USER_LOGOUT = "USER_LOGOUT";
 
 export const addCheckedOutItem = id => {
   return {
@@ -55,7 +56,6 @@ const fetchEventsByIds = eventIds => {
         });
     });
   }
-
   return {
     type: CURRENT_USER_EVENTS,
     payload: events
@@ -72,10 +72,17 @@ export const selectedEventData = id => {
         return snap.val();
       })
       .then(data => {
+        Object.assign(data, { id: id });
         dispatch({
           type: SELECTED_EVENT_DATA,
           payload: data
         });
       });
+  };
+};
+
+export const userLogout = () => {
+  return {
+    type: USER_LOGOUT
   };
 };

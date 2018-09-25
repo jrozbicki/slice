@@ -1,6 +1,6 @@
 import React from "react";
 import { compose } from "recompose";
-import { connect } from "react-redux";
+import firebase from "../../../firebase";
 
 import {
   Card,
@@ -21,7 +21,7 @@ import {
   withStyles
 } from "@material-ui/core";
 
-import { Add, Comment } from "@material-ui/icons";
+import { Add, Delete } from "@material-ui/icons";
 
 const styles = theme => ({
   cardActions: {
@@ -40,11 +40,12 @@ const styles = theme => ({
   }
 });
 
-class Event extends React.Component {
+class EventList extends React.Component {
   state = {
     dialogOpen: false,
     itemName: "",
-    itemQuantity: 1
+    itemQuantity: 1,
+    checkedItems: []
   };
 
   handleOpenDialog = () => {
@@ -52,26 +53,107 @@ class Event extends React.Component {
   };
 
   handleSubmit = () => {
+    firebase
+      .database()
+      .ref(`/events/${this.props.eventData.id}/list`)
+      .push({ name: this.state.itemName, quantity: this.state.itemQuantity });
+    this.props.selectedEventData(this.props.eventData.id);
     this.setState({ dialogOpen: false, itemName: "", itemQuantity: 1 });
+  };
+
+  handleRemove = e => {
+    firebase
+      .database()
+      .ref(`/events/${this.props.eventData.id}/list/${e.currentTarget.id}`)
+      .remove();
+    this.props.selectedEventData(this.props.eventData.id);
+  };
+
+  toggleCheckbox = e => {
+    if (
+      this.state.checkedItems.some(item => {
+        return item === e.target.closest("li div[role='button']").id;
+      })
+    ) {
+      const removedItem = this.state.checkedItems.filter(item => {
+        return item !== e.target.closest("li div[role='button']").id;
+      });
+      this.setState({
+        checkedItems: removedItem
+      });
+    } else {
+      const addedItem = [
+        ...this.state.checkedItems,
+        e.target.closest("li div[role='button']").id
+      ];
+      this.setState({
+        checkedItems: addedItem
+      });
+    }
+  };
+
+  isChecked = id => {
+    return this.state.checkedItems.some(item => {
+      return item === id;
+    });
   };
 
   handleDialogClose = () => {
     this.setState({ dialogOpen: false, itemName: "", itemQuantity: 1 });
   };
 
+  renderCard = () => {
+    return (
+      <Card>
+        <CardContent>
+          <Typography
+            variant="headline"
+            className={this.props.classes.cardTitle}
+          >
+            {this.props.eventData.name}
+          </Typography>
+          <List>{this.renderList()}</List>
+        </CardContent>
+        <CardActions className={this.props.classes.cardActions}>
+          <Button
+            onClick={this.handleOpenDialog}
+            variant="fab"
+            color="secondary"
+            aria-label="Add"
+          >
+            <Add fontSize="large" />
+          </Button>
+        </CardActions>
+      </Card>
+    );
+  };
+
   renderList = () => {
     if (this.props.eventData.list) {
       return Object.entries(this.props.eventData.list).map(item => {
-        console.log("renderingListitem", item);
         return (
-          <ListItem key={item[0]} dense button>
-            <Checkbox tabIndex={-1} disableRipple />
+          <ListItem
+            key={item[0]}
+            id={item[0]}
+            dense
+            button
+            onClick={this.toggleCheckbox}
+          >
+            <Checkbox
+              tabIndex={-1}
+              disableRipple
+              checked={this.isChecked(item[0])}
+            />
             <Typography variant="subheading">{`${item[1].name} x ${
               item[1].quantity
             }`}</Typography>
             <ListItemSecondaryAction>
-              <IconButton aria-label="Comments">
-                <Comment />
+              <IconButton
+                id={item[0]}
+                aria-label="Delete"
+                onClick={this.handleRemove}
+              >
+                <Delete />
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
@@ -84,25 +166,7 @@ class Event extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        <Card>
-          <CardContent>
-            <Typography variant="headline" className={classes.cardTitle}>
-              {this.props.eventData.name}
-            </Typography>
-            <List>{this.renderList()}</List>
-          </CardContent>
-          <CardActions className={classes.cardActions}>
-            <Button
-              onClick={this.handleOpenDialog}
-              variant="fab"
-              color="secondary"
-              aria-label="Add"
-            >
-              <Add fontSize="large" />
-            </Button>
-          </CardActions>
-        </Card>
-
+        {this.props.eventData.name ? this.renderCard() : ""}
         <Dialog
           open={this.state.dialogOpen}
           onClose={this.handleDialogClose}
@@ -151,13 +215,4 @@ class Event extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    eventData: state.eventData
-  };
-};
-
-export default compose(
-  withStyles(styles),
-  connect(mapStateToProps)
-)(Event);
+export default compose(withStyles(styles))(EventList);
