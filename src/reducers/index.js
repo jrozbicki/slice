@@ -1,8 +1,21 @@
 import { combineReducers } from "redux";
 import CheckOutItemsReducer from "./reducer_checked_out_items";
+import CurrentUserDataReducer from "./reducer_userData";
+import CurrentUserEventsReducer from "./reducer_events";
+import SelectedEventDataReducer from "./reducer_event_data";
 
-const rootReducer = combineReducers({
-  checkedOutItems: CheckOutItemsReducer
+const appReducer = combineReducers({
+  checkedOutItems: CheckOutItemsReducer,
+  currentUserData: CurrentUserDataReducer,
+  currentUserEvents: CurrentUserEventsReducer,
+  eventData: SelectedEventDataReducer
 });
+
+const rootReducer = (state, action) => {
+  if (action.type === "USER_LOGOUT") {
+    state = undefined;
+  }
+  return appReducer(state, action);
+};
 
 export default rootReducer;

@@ -2,6 +2,9 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import firebase from "../../../firebase";
 import { withRouter } from "react-router-dom";
+import { compose } from "recompose";
+import { connect } from "react-redux";
+import { currentUserData } from "../../../actions";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -54,9 +57,9 @@ class SignIn extends Component {
     this.state = { email: "", password: "" };
   }
 
-  pushUserAfterAuth = uid => {
-    this.props.history.push(`/${uid}`);
-  };
+  componentWillUnmount() {
+    this.setState({ email: "", password: "" });
+  }
 
   handleSignIn = () => {
     firebase
@@ -66,25 +69,26 @@ class SignIn extends Component {
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        localStorage.setItem("isLoggedIn", true);
-        localStorage.setItem("userData", JSON.stringify(user));
-        this.pushUserAfterAuth(user.uid);
+        sessionStorage.setItem("isLoggedIn", true);
+        sessionStorage.setItem("userData", JSON.stringify(user));
+        this.props.history.push("/");
+      } else {
+        //TODO: handle error case -> SNACKBAR
       }
     });
-
-    this.setState({ email: "", password: "" });
   };
 
   handleSignUp = () => {
     firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      //TODO: handle error with snackbar
       .catch(err => console.log(err.message));
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        localStorage.setItem("isLoggedIn", true);
-        localStorage.setItem("userData", JSON.stringify(user));
+        sessionStorage.setItem("isLoggedIn", true);
+        sessionStorage.setItem("userData", JSON.stringify(user));
 
         firebase
           .database()
@@ -97,12 +101,9 @@ class SignIn extends Component {
               user: true
             }
           });
-
-        this.pushUserAfterAuth(user.uid);
+        this.props.history.push("/");
       }
     });
-
-    this.setState({ email: "", password: "" });
   };
 
   render() {
@@ -169,4 +170,11 @@ SignIn.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withRouter(withStyles(styles)(SignIn));
+export default compose(
+  withRouter,
+  withStyles(styles),
+  connect(
+    null,
+    { currentUserData }
+  )
+)(SignIn);

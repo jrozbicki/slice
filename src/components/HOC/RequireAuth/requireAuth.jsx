@@ -1,5 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
+
 export default function requireAuth(Component) {
   class AuthenticatedComponent extends React.Component {
     componentWillMount() {
@@ -7,13 +8,16 @@ export default function requireAuth(Component) {
     }
 
     checkAuth() {
-      if (localStorage.isLoggedIn === "false") {
+      if (
+        sessionStorage.getItem("isLoggedIn") === "false" ||
+        sessionStorage.getItem("isLoggedIn") === null
+      ) {
         this.props.history.push(`/login`);
       }
     }
 
     render() {
-      return localStorage.isLoggedIn === "true" ? (
+      return sessionStorage.getItem("isLoggedIn") === "true" ? (
         <Component {...this.props} />
       ) : null;
     }
