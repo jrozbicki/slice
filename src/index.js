@@ -9,6 +9,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import reducers from "./reducers";
 import Dashboard from "./views/Dashboard/Dashboard";
 import Login from "./views/Login/Login";
+import SignUp from "./views/SignUp/SignUp";
 import requireAuth from "./components/HOC/RequireAuth/requireAuth";
 import thunk from "redux-thunk";
 import logger from "redux-logger";
@@ -25,6 +26,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Switch>
         <Route exact path="/login" component={Login} />
+        <Route exact path="/signup" component={SignUp} />
         <Route exact path="/" component={requireAuth(Dashboard)} />
         <Route
           exact

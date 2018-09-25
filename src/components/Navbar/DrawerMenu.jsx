@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 
-import { selectedEventData, userLogout } from "../../actions";
+import { selectedEventData, addEvent, userLogout } from "../../actions";
 
 import {
   ListItem,
@@ -15,6 +15,12 @@ import {
   List,
   Hidden,
   Collapse,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+  Button,
   withStyles
 } from "@material-ui/core";
 
@@ -32,6 +38,12 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
   nested: {
     paddingLeft: theme.spacing.unit * 4
+  },
+  dialogTitle: {
+    textAlign: "center"
+  },
+  dialogTextField: {
+    width: "100%"
   }
 });
 
@@ -40,7 +52,9 @@ class DrawerMenu extends Component {
     super(props);
 
     this.state = {
-      eventsOpen: false
+      eventsOpen: true,
+      dialogOpen: false,
+      eventName: ""
     };
   }
 
@@ -84,6 +98,19 @@ class DrawerMenu extends Component {
     }
   };
 
+  handleOpenDialog = () => {
+    this.setState({ dialogOpen: true });
+  };
+
+  handleCloseDialog = () => {
+    this.setState({ dialogOpen: false, eventName: "", eventsOpen: true });
+  };
+
+  handleEventSubmit = () => {
+    this.props.addEvent(this.props.userData.uid, this.state.eventName);
+    this.handleCloseDialog();
+  };
+
   render() {
     const { classes, userData } = this.props;
     return (
@@ -114,7 +141,7 @@ class DrawerMenu extends Component {
           <Collapse in={this.state.eventsOpen} timeoute="auto">
             <List>{this.renderEvents()}</List>
             <List>
-              <ListItem button>
+              <ListItem button onClick={this.handleOpenDialog}>
                 <ListItemIcon>
                   <Add />
                 </ListItemIcon>
@@ -123,6 +150,41 @@ class DrawerMenu extends Component {
             </List>
           </Collapse>
         </List>
+
+        <Dialog
+          open={this.state.dialogOpen}
+          onClose={this.handleCloseDialog}
+          aria-labelledby="add-event"
+        >
+          <DialogTitle id="add-event" className={classes.dialogTitle}>
+            Add event
+          </DialogTitle>
+
+          <DialogContent>
+            <TextField
+              autoFocus
+              required
+              className={classes.dialogTextField}
+              autoComplete="off"
+              id="name"
+              label="Event name"
+              helperText="Set meaningfull name!"
+              type="text"
+              value={this.state.eventName}
+              onChange={e => this.setState({ eventName: e.target.value })}
+            />
+          </DialogContent>
+
+          <DialogActions>
+            <Button
+              onClick={this.handleEventSubmit}
+              disabled={this.state.eventName === ""}
+              color="primary"
+            >
+              ADD EVENT
+            </Button>
+          </DialogActions>
+        </Dialog>
 
         <Divider />
 
@@ -156,6 +218,6 @@ export default compose(
   withRouter,
   connect(
     mapStateToProps,
-    { selectedEventData, userLogout }
+    { selectedEventData, addEvent, userLogout }
   )
 )(DrawerMenu);

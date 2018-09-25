@@ -5,6 +5,7 @@ export const REMOVE_CHECKEDOUT_ITEM = "REMOVE_CHECKEDOUT_ITEM";
 export const CURRENT_USER_DATA = "CURRENT_USER_DATA";
 export const CURRENT_USER_EVENTS = "CURRENT_USER_EVENTS";
 export const SELECTED_EVENT_DATA = "SELECTED_EVENT_DATA";
+export const ADD_EVENT = "ADD_EVENT";
 export const USER_LOGOUT = "USER_LOGOUT";
 
 export const addCheckedOutItem = id => {
@@ -78,6 +79,36 @@ export const selectedEventData = id => {
           payload: data
         });
       });
+  };
+};
+
+export const addEvent = (userId, name) => {
+  return dispatch => {
+    const eventData = {
+      name: name,
+      users: [userId]
+    };
+
+    const key = firebase
+      .database()
+      .ref()
+      .push().key;
+
+    let updates = {};
+    updates[`/events/${key}`] = eventData;
+    updates[`/users/${userId}/events/${key}`] = true;
+
+    firebase
+      .database()
+      .ref()
+      .update(updates)
+      .then(() => {
+        dispatch(currentUserEvents(userId));
+      });
+
+    return {
+      type: ADD_EVENT
+    };
   };
 };
 
