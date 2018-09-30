@@ -4,7 +4,12 @@ import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 
-import { selectedEventData, addEvent, userLogout } from "../../actions";
+import {
+  selectedEventData,
+  addEvent,
+  deleteEvent,
+  userLogout
+} from "../../actions";
 
 import {
   ListItem,
@@ -21,6 +26,8 @@ import {
   TextField,
   DialogActions,
   Button,
+  ListItemSecondaryAction,
+  IconButton,
   withStyles
 } from "@material-ui/core";
 
@@ -31,7 +38,8 @@ import {
   PowerSettingsNew,
   ExpandLess,
   ExpandMore,
-  Star
+  Star,
+  Delete
 } from "@material-ui/icons";
 
 const styles = theme => ({
@@ -52,10 +60,21 @@ class DrawerMenu extends Component {
     super(props);
 
     this.state = {
-      eventsOpen: true,
+      eventsOpen: false,
       dialogOpen: false,
-      eventName: ""
+      eventName: "",
+      currentEvents: null
     };
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.events !== state.currentEvents) {
+      console.log("derived props difference");
+      return {
+        currentEvents: props.events
+      };
+    }
+    return null;
   }
 
   handleLogOut = () => {
@@ -77,8 +96,9 @@ class DrawerMenu extends Component {
   };
 
   renderEvents = () => {
-    if (this.props.events !== undefined && this.props.events !== null) {
-      const arrayEvents = Object.entries(this.props.events);
+    if (this.state.currentEvents) {
+      console.log(this.state.currentEvents);
+      const arrayEvents = Object.entries(this.state.currentEvents);
       return arrayEvents.map(arr => {
         return (
           <ListItem
@@ -92,6 +112,15 @@ class DrawerMenu extends Component {
               <Star />
             </ListItemIcon>
             <ListItemText inset primary={arr[1].name} />
+            <ListItemSecondaryAction>
+              <IconButton
+                id={arr[0]}
+                aria-label="Delete"
+                onClick={this.handleDeleteEvent}
+              >
+                <Delete />
+              </IconButton>
+            </ListItemSecondaryAction>
           </ListItem>
         );
       });
@@ -103,12 +132,19 @@ class DrawerMenu extends Component {
   };
 
   handleCloseDialog = () => {
-    this.setState({ dialogOpen: false, eventName: "", eventsOpen: true });
+    this.setState({
+      eventName: "",
+      dialogOpen: false
+    });
   };
 
   handleEventSubmit = () => {
     this.props.addEvent(this.props.userData.uid, this.state.eventName);
     this.handleCloseDialog();
+  };
+
+  handleDeleteEvent = e => {
+    this.props.deleteEvent(this.props.userData.uid, e.currentTarget.id);
   };
 
   render() {
@@ -218,6 +254,6 @@ export default compose(
   withRouter,
   connect(
     mapStateToProps,
-    { selectedEventData, addEvent, userLogout }
+    { selectedEventData, addEvent, deleteEvent, userLogout }
   )
 )(DrawerMenu);

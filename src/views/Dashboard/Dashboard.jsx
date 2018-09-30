@@ -6,11 +6,10 @@ import { currentUserData, currentUserEvents } from "../../actions";
 
 class Dashboard extends Component {
   componentDidMount() {
-    const userData = JSON.parse(sessionStorage.getItem("userData"));
-    this.props.currentUserData(userData);
-    this.props.currentUserEvents(userData.uid);
+    const user = JSON.parse(sessionStorage.getItem("userData"));
+    this.props.currentUserData(user);
+    this.props.currentUserEvents(user.uid);
   }
-
   render() {
     return (
       <Fragment>

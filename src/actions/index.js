@@ -7,6 +7,7 @@ export const CURRENT_USER_EVENTS = "CURRENT_USER_EVENTS";
 export const SELECTED_EVENT_DATA = "SELECTED_EVENT_DATA";
 export const ADD_EVENT = "ADD_EVENT";
 export const USER_LOGOUT = "USER_LOGOUT";
+export const DELETE_EVENT = "DELETE_EVENT";
 
 export const addCheckedOutItem = id => {
   return {
@@ -51,10 +52,7 @@ const fetchEventsByIds = eventIds => {
       return firebase
         .database()
         .ref(`/events/${item}`)
-        .once("value")
-        .then(snap => {
-          Object.assign(events, { [item]: snap.val() });
-        });
+        .on("value", snap => Object.assign(events, { [item]: snap.val() }));
     });
   }
   return {
@@ -108,6 +106,26 @@ export const addEvent = (userId, name) => {
 
     return {
       type: ADD_EVENT
+    };
+  };
+};
+
+export const deleteEvent = (userId, eventId) => {
+  return dispatch => {
+    const updates = {};
+    updates[`/events/${eventId}`] = null;
+    updates[`users/${userId}/events/${eventId}`] = null;
+
+    firebase
+      .database()
+      .ref()
+      .update(updates)
+      .then(() => {
+        dispatch(currentUserEvents(userId));
+      });
+
+    return {
+      type: DELETE_EVENT
     };
   };
 };

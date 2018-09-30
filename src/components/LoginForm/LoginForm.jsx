@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import firebase from "../../firebase";
 import { compose } from "recompose";
 import { connect } from "react-redux";
-import { currentUserData } from "../../actions";
+import { currentUserData, currentUserEvents } from "../../actions";
 
 import { LoginFormWrapper } from "./styles";
 import Avatar from "@material-ui/core/Avatar";
@@ -70,11 +70,10 @@ class LoginForm extends Component {
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .catch(err => console.log(err.message));
-
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        sessionStorage.setItem("isLoggedIn", true);
         sessionStorage.setItem("userData", JSON.stringify(user));
+        sessionStorage.setItem("isLoggedIn", true);
         this.props.history.push("/");
       } else {
         //TODO: handle error case -> SNACKBAR
@@ -84,32 +83,6 @@ class LoginForm extends Component {
 
   handleSignUp = () => {
     this.props.history.push("/signup");
-
-    // firebase
-    //   .auth()
-    //   .createUserWithEmailAndPassword(this.state.email, this.state.password)
-    //   //TODO: handle error with snackbar
-    //   .catch(err => console.log(err.message));
-
-    // firebase.auth().onAuthStateChanged(user => {
-    //   if (user) {
-    //     sessionStorage.setItem("isLoggedIn", true);
-    //     sessionStorage.setItem("userData", JSON.stringify(user));
-
-    //     firebase
-    //       .database()
-    //       .ref("/users")
-    //       .child(user.uid)
-    //       .set({
-    //         email: user.email,
-    //         privilages: {
-    //           admin: false,
-    //           user: true
-    //         }
-    //       });
-    //     this.props.history.push("/");
-    //   }
-    // });
   };
 
   render() {
@@ -183,6 +156,6 @@ export default compose(
   withStyles(styles),
   connect(
     null,
-    { currentUserData }
+    { currentUserData, currentUserEvents }
   )
 )(LoginForm);
