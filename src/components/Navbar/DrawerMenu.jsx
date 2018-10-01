@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import firebase from "../../firebase";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
@@ -55,26 +55,15 @@ const styles = theme => ({
   }
 });
 
-class DrawerMenu extends Component {
+class DrawerMenu extends PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
       eventsOpen: false,
       dialogOpen: false,
-      eventName: "",
-      currentEvents: null
+      eventName: ""
     };
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    if (props.events !== state.currentEvents) {
-      console.log("derived props difference");
-      return {
-        currentEvents: props.events
-      };
-    }
-    return null;
   }
 
   handleLogOut = () => {
@@ -96,25 +85,27 @@ class DrawerMenu extends Component {
   };
 
   renderEvents = () => {
-    if (this.state.currentEvents) {
-      console.log(this.state.currentEvents);
-      const arrayEvents = Object.entries(this.state.currentEvents);
-      return arrayEvents.map(arr => {
+    const { events } = this.props;
+    if (events) {
+      console.log("events", events);
+      console.log("object.keys(events)", Object.keys(events));
+      console.log("object.values(events)", Object.values(events));
+      return Object.keys(events).map(keyName => {
         return (
           <ListItem
             button
-            key={arr[0]}
-            id={arr[0]}
+            key={keyName}
+            id={keyName}
             className={this.props.classes.nested}
             onClick={this.loadEvent}
           >
             <ListItemIcon>
               <Star />
             </ListItemIcon>
-            <ListItemText inset primary={arr[1].name} />
+            <ListItemText inset primary={events[keyName].name} />
             <ListItemSecondaryAction>
               <IconButton
-                id={arr[0]}
+                id={keyName}
                 aria-label="Delete"
                 onClick={this.handleDeleteEvent}
               >
@@ -124,6 +115,38 @@ class DrawerMenu extends Component {
           </ListItem>
         );
       });
+      // console.log("this.props.events", this.props.events);
+      // console.log(
+      //   "Object.entries(this.props.events)",
+      //   Object.entries(this.props.events)
+      // );
+      // const arrayEvents = Object.entries(this.props.events);
+      // console.log("arrayEvents", arrayEvents);
+      // return arrayEvents.map(arr => {
+      //   return (
+      //     <ListItem
+      //       button
+      //       key={arr[0]}
+      //       id={arr[0]}
+      //       className={this.props.classes.nested}
+      //       onClick={this.loadEvent}
+      //     >
+      //       <ListItemIcon>
+      //         <Star />
+      //       </ListItemIcon>
+      //       <ListItemText inset primary={arr[1].name} />
+      //       <ListItemSecondaryAction>
+      //         <IconButton
+      //           id={arr[0]}
+      //           aria-label="Delete"
+      //           onClick={this.handleDeleteEvent}
+      //         >
+      //           <Delete />
+      //         </IconButton>
+      //       </ListItemSecondaryAction>
+      //     </ListItem>
+      //   );
+      // });
     }
   };
 
