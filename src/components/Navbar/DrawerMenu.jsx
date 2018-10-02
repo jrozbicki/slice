@@ -86,7 +86,6 @@ class DrawerMenu extends PureComponent {
 
   renderEvents = () => {
     const { events } = this.props;
-    console.log(events);
     if (events) {
       return Object.keys(events).map(keyName => {
         return (
@@ -132,8 +131,13 @@ class DrawerMenu extends PureComponent {
     this.handleCloseDialog();
   };
 
+  handleEventSubmitOnEnter = e => {
+    if (e.key == "Enter") {
+      this.handleEventSubmit();
+    }
+  };
+
   handleDeleteEvent = e => {
-    console.log("deleting", e.currentTarget.id);
     this.props.deleteEvent(this.props.userData.uid, e.currentTarget.id);
   };
 
@@ -198,6 +202,7 @@ class DrawerMenu extends PureComponent {
               type="text"
               value={this.state.eventName}
               onChange={e => this.setState({ eventName: e.target.value })}
+              onKeyPress={this.handleEventSubmitOnEnter}
             />
           </DialogContent>
 

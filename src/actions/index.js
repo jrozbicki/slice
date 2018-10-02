@@ -53,7 +53,6 @@ export const addEvent = (userId, name) => {
       .then(() => {
         dispatch(currentUserEvents(userId));
       });
-    console.log("ADD_EVENT");
     return {
       type: ADD_EVENT
     };
@@ -73,7 +72,6 @@ export const deleteEvent = (userId, eventId) => {
       .then(() => {
         dispatch(currentUserEvents(userId));
       });
-    console.log("DELETE_EVENT");
     return {
       type: DELETE_EVENT
     };
@@ -104,23 +102,6 @@ export const currentUserEvents = uid => {
     payload: events
   };
 };
-
-// const fetchEventsByIds = eventIds => {
-//   let events = {};
-//   if (eventIds) {
-//     Object.getOwnPropertyNames(eventIds).map(item => {
-//       return firebase
-//         .database()
-//         .ref(`/events/${item}`)
-//         .once("value")
-//         .then(snap => Object.assign(events, { [item]: snap }));
-//     });
-//   }
-//   return {
-//     type: CURRENT_USER_EVENTS,
-//     payload: events
-//   };
-// };
 
 export const selectedEventData = id => {
   return dispatch => {
