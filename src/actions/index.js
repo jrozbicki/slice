@@ -8,6 +8,7 @@ export const SELECTED_EVENT_DATA = "SELECTED_EVENT_DATA";
 export const ADD_EVENT = "ADD_EVENT";
 export const USER_LOGOUT = "USER_LOGOUT";
 export const DELETE_EVENT = "DELETE_EVENT";
+export const USUBSCRIBE_FROM_FIREBASE = "USUBSCRIBE_FROM_FIREBASE";
 
 export const addCheckedOutItem = id => {
   return {
@@ -49,10 +50,10 @@ export const addEvent = (userId, name) => {
     firebase
       .database()
       .ref()
-      .update(updates)
-      .then(() => {
-        dispatch(currentUserEvents(userId));
-      });
+      .update(updates);
+    // .then(() => {
+    //   dispatch(currentUserEvents(userId));
+    // });
     return {
       type: ADD_EVENT
     };
@@ -113,13 +114,23 @@ export const selectedEventData = id => {
         return snap.val();
       })
       .then(data => {
-        Object.assign(data, { id: id });
-        dispatch({
-          type: SELECTED_EVENT_DATA,
-          payload: data
-        });
+        if (data) {
+          Object.assign(data, { id: id });
+          dispatch({
+            type: SELECTED_EVENT_DATA,
+            payload: data
+          });
+        }
       });
   };
+};
+
+export const unsubscribeFirebase = () => {
+  firebase
+    .database()
+    .ref()
+    .off();
+  return { type: USUBSCRIBE_FROM_FIREBASE };
 };
 
 export const userLogout = () => {

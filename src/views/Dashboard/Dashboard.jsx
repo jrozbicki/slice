@@ -2,7 +2,11 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import Event from "../../components/Event/Event";
 import Navbar from "../../components/Navbar/Navbar";
-import { currentUserData, currentUserEvents } from "../../actions";
+import {
+  currentUserData,
+  currentUserEvents,
+  unsubscribeFirebase
+} from "../../actions";
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -10,6 +14,11 @@ class Dashboard extends Component {
     this.props.currentUserData(user);
     this.props.currentUserEvents(user.uid);
   }
+
+  componentWillUnmount() {
+    this.props.unsubscribeFirebase();
+  }
+
   render() {
     return (
       <Fragment>
@@ -23,5 +32,5 @@ class Dashboard extends Component {
 
 export default connect(
   null,
-  { currentUserData, currentUserEvents }
+  { currentUserData, currentUserEvents, unsubscribeFirebase }
 )(Dashboard);
