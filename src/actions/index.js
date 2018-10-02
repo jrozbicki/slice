@@ -30,56 +30,6 @@ export const currentUserData = userData => {
   };
 };
 
-export const currentUserEvents = uid => {
-  return dispatch => {
-    firebase
-      .database()
-      .ref(`/users/${uid}/events`)
-      .once("value")
-      .then(snap => {
-        return snap.val();
-      })
-      .then(data => {
-        dispatch(fetchEventsByIds(data));
-      });
-  };
-};
-
-const fetchEventsByIds = eventIds => {
-  let events = {};
-  if (eventIds) {
-    Object.getOwnPropertyNames(eventIds).map(item => {
-      return firebase
-        .database()
-        .ref(`/events/${item}`)
-        .on("value", snap => Object.assign(events, { [item]: snap.val() }));
-    });
-  }
-  return {
-    type: CURRENT_USER_EVENTS,
-    payload: events
-  };
-};
-
-export const selectedEventData = id => {
-  return dispatch => {
-    firebase
-      .database()
-      .ref(`/events/${id}`)
-      .once("value")
-      .then(snap => {
-        return snap.val();
-      })
-      .then(data => {
-        Object.assign(data, { id: id });
-        dispatch({
-          type: SELECTED_EVENT_DATA,
-          payload: data
-        });
-      });
-  };
-};
-
 export const addEvent = (userId, name) => {
   return dispatch => {
     const eventData = {
@@ -103,7 +53,7 @@ export const addEvent = (userId, name) => {
       .then(() => {
         dispatch(currentUserEvents(userId));
       });
-
+    console.log("ADD_EVENT");
     return {
       type: ADD_EVENT
     };
@@ -123,10 +73,71 @@ export const deleteEvent = (userId, eventId) => {
       .then(() => {
         dispatch(currentUserEvents(userId));
       });
-
+    console.log("DELETE_EVENT");
     return {
       type: DELETE_EVENT
     };
+  };
+};
+
+export const currentUserEvents = uid => {
+  let events = {};
+  firebase
+    .database()
+    .ref(`/users/${uid}/events`)
+    .on("value", snap => {
+      if (snap.val()) {
+        Object.getOwnPropertyNames(snap.val()).map(item => {
+          return firebase
+            .database()
+            .ref(`/events/${item}`)
+            .on("value", snapshot => {
+              if (snapshot.val()) {
+                Object.assign(events, { [item]: snapshot.val() });
+              }
+            });
+        });
+      }
+    });
+  return {
+    type: CURRENT_USER_EVENTS,
+    payload: events
+  };
+};
+
+// const fetchEventsByIds = eventIds => {
+//   let events = {};
+//   if (eventIds) {
+//     Object.getOwnPropertyNames(eventIds).map(item => {
+//       return firebase
+//         .database()
+//         .ref(`/events/${item}`)
+//         .once("value")
+//         .then(snap => Object.assign(events, { [item]: snap }));
+//     });
+//   }
+//   return {
+//     type: CURRENT_USER_EVENTS,
+//     payload: events
+//   };
+// };
+
+export const selectedEventData = id => {
+  return dispatch => {
+    firebase
+      .database()
+      .ref(`/events/${id}`)
+      .once("value")
+      .then(snap => {
+        return snap.val();
+      })
+      .then(data => {
+        Object.assign(data, { id: id });
+        dispatch({
+          type: SELECTED_EVENT_DATA,
+          payload: data
+        });
+      });
   };
 };
 
