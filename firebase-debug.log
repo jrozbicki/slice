@@ -1,0 +1,51 @@
+[debug] [2018-10-02T17:50:43.686Z] ----------------------------------------------------------------------
+[debug] [2018-10-02T17:50:43.688Z] Command:       /usr/bin/node /usr/local/bin/firebase deploy
+[debug] [2018-10-02T17:50:43.688Z] CLI Version:   4.2.1
+[debug] [2018-10-02T17:50:43.688Z] Platform:      linux
+[debug] [2018-10-02T17:50:43.688Z] Node Version:  v8.10.0
+[debug] [2018-10-02T17:50:43.689Z] Time:          Tue Oct 02 2018 19:50:43 GMT+0200 (CEST)
+[debug] [2018-10-02T17:50:43.689Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-10-02T17:50:43.695Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-10-02T17:50:43.696Z] > authorizing via signed-in user
+[debug] [2018-10-02T17:50:43.697Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-10-02T17:50:43.700Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+
+[debug] [2018-10-02T17:50:52.848Z] ----------------------------------------------------------------------
+[debug] [2018-10-02T17:50:52.850Z] Command:       /usr/bin/node /usr/local/bin/firebase init
+[debug] [2018-10-02T17:50:52.850Z] CLI Version:   4.2.1
+[debug] [2018-10-02T17:50:52.850Z] Platform:      linux
+[debug] [2018-10-02T17:50:52.850Z] Node Version:  v8.10.0
+[debug] [2018-10-02T17:50:52.850Z] Time:          Tue Oct 02 2018 19:50:52 GMT+0200 (CEST)
+[debug] [2018-10-02T17:50:52.850Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-10-02T17:50:52.856Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase"]
+[debug] [2018-10-02T17:50:52.856Z] > authorizing via signed-in user
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/kbk/coding/slice
+
+Before we get started, keep in mind:
+
+  * You are initializing in an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2018-10-02T17:50:57.150Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-10-02T17:50:57.151Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+
+[debug] [2018-10-02T17:50:57.522Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-02T17:50:57.534Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects  
+ 

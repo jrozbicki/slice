@@ -61,6 +61,12 @@ class EventList extends React.Component {
     this.setState({ dialogOpen: false, itemName: "", itemQuantity: 1 });
   };
 
+  handleSubmitOnEnter = e => {
+    if (e.key === "Enter") {
+      this.handleSubmit();
+    }
+  };
+
   handleRemove = e => {
     firebase
       .database()
@@ -179,6 +185,7 @@ class EventList extends React.Component {
           <DialogContent>
             <TextField
               autoFocus
+              onKeyPress={this.handleSubmitOnEnter}
               className={classes.dialogTextField}
               autoComplete="off"
               id="name"

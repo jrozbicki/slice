@@ -132,7 +132,7 @@ class DrawerMenu extends PureComponent {
   };
 
   handleEventSubmitOnEnter = e => {
-    if (e.key == "Enter") {
+    if (e.key === "Enter") {
       this.handleEventSubmit();
     }
   };
