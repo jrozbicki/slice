@@ -1,6 +1,7 @@
 import React from "react";
 import { compose } from "recompose";
 import firebase from "../../../firebase";
+import { connect } from "react-redux";
 
 import {
   Card,
@@ -18,15 +19,20 @@ import {
   Checkbox,
   ListItemSecondaryAction,
   IconButton,
-  withStyles
+  withStyles,
+  InputAdornment,
+  Input
 } from "@material-ui/core";
 
-import { Add, Delete } from "@material-ui/icons";
+import { Add, Delete, AttachMoney } from "@material-ui/icons";
 
 const styles = theme => ({
+  button: {
+    marginBottom: theme.spacing.unit
+  },
   cardActions: {
     display: "flex",
-    justifyContent: "flex-end"
+    justifyContent: "space-between"
   },
   cardTitle: {
     textAlign: "center",
@@ -37,28 +43,100 @@ const styles = theme => ({
   },
   dialogTextField: {
     width: "100%"
+  },
+  dialogCheckOutListItem: {
+    paddingLeft: 0,
+    paddingRight: 0
+  },
+  dialogCheckOutList: {
+    marginBottom: 24
   }
 });
 
 class EventList extends React.Component {
   state = {
-    dialogOpen: false,
+    dialogAddOpen: false,
+    dialogCheckOutOpen: false,
     itemName: "",
     itemQuantity: 1,
-    checkedItems: []
+    checkedItems: [],
+    checkOutValue: 0
   };
 
-  handleOpenDialog = () => {
-    this.setState({ dialogOpen: true });
+  handleDialogAddOpen = () => {
+    this.setState({ dialogAddOpen: true });
+  };
+
+  handleDialogAddClose = () => {
+    this.setState({ dialogAddOpen: false, itemName: "", itemQuantity: 1 });
+  };
+
+  handleCheckOutOpen = () => {
+    this.setState({ dialogCheckOutOpen: true });
+  };
+
+  handleDialogCheckOutClose = () => {
+    this.setState({ dialogCheckOutOpen: false });
   };
 
   handleSubmit = () => {
+    const itemId = firebase
+      .database()
+      .ref()
+      .push().key;
+
+    const item = {
+      id: itemId,
+      name: this.state.itemName,
+      quantity: this.state.itemQuantity
+    };
+
+    let updates = {};
+    updates[`/events/${this.props.eventData.id}/list/${itemId}`] = item;
+
     firebase
       .database()
-      .ref(`/events/${this.props.eventData.id}/list`)
-      .push({ name: this.state.itemName, quantity: this.state.itemQuantity });
+      .ref()
+      .update(updates);
+
     this.props.selectedEventData(this.props.eventData.id);
-    this.setState({ dialogOpen: false, itemName: "", itemQuantity: 1 });
+    this.setState({ dialogAddOpen: false, itemName: "", itemQuantity: 1 });
+  };
+
+  handleCheckOutSubmit = () => {
+    const purchaseKey = firebase
+      .database()
+      .ref()
+      .push().key;
+
+    let items = {};
+    this.state.checkedItems.map(item => {
+      return (items = { ...items, ...{ [item.id]: item } });
+    });
+    const purchaseData = { items, price: this.state.checkOutValue };
+
+    let updates = {};
+    updates[
+      `/users/${this.props.currentUserData.uid}/events/${
+        this.props.eventData.id
+      }/purchases/${purchaseKey}`
+    ] = purchaseData;
+
+    this.state.checkedItems.map(item => {
+      return (updates = {
+        ...updates,
+        ...{ [`/events/${this.props.eventData.id}/list/${item.id}`]: null }
+      });
+    });
+
+    firebase
+      .database()
+      .ref()
+      .update(updates);
+
+    this.setState({ checkedItems: [], checkOutValue: 0 });
+    this.props.selectedEventData(this.props.eventData.id);
+    this.handleDialogCheckOutClose();
   };
 
   handleSubmitOnEnter = e => {
@@ -78,34 +156,32 @@ class EventList extends React.Component {
   toggleCheckbox = e => {
     if (
       this.state.checkedItems.some(item => {
-        return item === e.target.closest("li div[role='button']").id;
+        return item.id === e.target.closest("li div[role='button']").id;
       })
     ) {
       const removedItem = this.state.checkedItems.filter(item => {
-        return item !== e.target.closest("li div[role='button']").id;
+        return item.id !== e.target.closest("li div[role='button']").id;
       });
       this.setState({
         checkedItems: removedItem
       });
     } else {
-      const addedItem = [
-        ...this.state.checkedItems,
-        e.target.closest("li div[role='button']").id
-      ];
+      const itemId = e.target.closest("li div[role='button']").id;
+      const addedItem = {
+        id: itemId,
+        ...this.props.eventData.list[itemId]
+      };
+      console.log(addedItem);
       this.setState({
-        checkedItems: addedItem
+        checkedItems: [...this.state.checkedItems, addedItem]
       });
     }
   };
 
   isChecked = id => {
     return this.state.checkedItems.some(item => {
-      return item === id;
+      return item.id === id;
     });
-  };
-
-  handleDialogClose = () => {
-    this.setState({ dialogOpen: false, itemName: "", itemQuantity: 1 });
   };
 
   renderCard = () => {
@@ -122,7 +198,18 @@ class EventList extends React.Component {
         </CardContent>
         <CardActions className={this.props.classes.cardActions}>
           <Button
-            onClick={this.handleOpenDialog}
+            className={this.props.classes.button}
+            onClick={this.handleCheckOutOpen}
+            variant="fab"
+            color="primary"
+            aria-label="Cashout"
+          >
+            <AttachMoney fontSize="large" />
+          </Button>
+
+          <Button
+            className={this.props.classes.button}
+            onClick={this.handleDialogAddOpen}
             variant="fab"
             color="secondary"
             aria-label="Add"
@@ -168,14 +255,73 @@ class EventList extends React.Component {
     }
   };
 
+  renderCheckOutList = () => {
+    return this.state.checkedItems.map(item => {
+      return (
+        <ListItem
+          className={this.props.classes.dialogCheckOutListItem}
+          key={item.id}
+        >
+          {`${this.props.eventData.list[item.id].name} x ${
+            this.props.eventData.list[item.id].quantity
+          }`}
+        </ListItem>
+      );
+    });
+  };
+
   render() {
-    const { classes } = this.props;
+    const { classes, eventData } = this.props;
+    const {
+      dialogAddOpen,
+      dialogCheckOutOpen,
+      checkOutValue,
+      itemName,
+      itemQuantity
+    } = this.state;
     return (
       <div>
-        {this.props.eventData.name ? this.renderCard() : ""}
+        {eventData.name ? this.renderCard() : ""}
         <Dialog
-          open={this.state.dialogOpen}
-          onClose={this.handleDialogClose}
+          open={dialogCheckOutOpen}
+          onClose={this.handleDialogCheckOutClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
+            Sum up shopping
+          </DialogTitle>
+
+          <DialogContent>
+            <List className={classes.dialogCheckOutList}>
+              {this.renderCheckOutList()}
+            </List>
+            <Input
+              id="checkout"
+              className={classes.dialogTextField}
+              onKeyPress={this.handleSubmitOnEnter}
+              autoComplete="off"
+              label="Total purchase price"
+              type="number"
+              endAdornment={<InputAdornment position="end">zł</InputAdornment>}
+              value={checkOutValue}
+              onChange={e => this.setState({ checkOutValue: e.target.value })}
+            />
+          </DialogContent>
+
+          <DialogActions>
+            <Button
+              onClick={this.handleCheckOutSubmit}
+              disabled={checkOutValue <= 0}
+              color="primary"
+            >
+              CHECK OUT
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={dialogAddOpen}
+          onClose={this.handleDialogAddClose}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
@@ -191,7 +337,7 @@ class EventList extends React.Component {
               id="name"
               label="Item name"
               type="text"
-              value={this.state.itemName}
+              value={itemName}
               onChange={e => this.setState({ itemName: e.target.value })}
             />
             <TextField
@@ -200,7 +346,7 @@ class EventList extends React.Component {
               autoComplete="off"
               label="Item quantity"
               type="number"
-              value={this.state.itemQuantity}
+              value={itemQuantity}
               onChange={e => this.setState({ itemQuantity: e.target.value })}
             />
           </DialogContent>
@@ -208,9 +354,7 @@ class EventList extends React.Component {
           <DialogActions>
             <Button
               onClick={this.handleSubmit}
-              disabled={
-                this.state.itemName === "" || this.state.itemQuantity < 1
-              }
+              disabled={itemName === "" || itemQuantity < 1}
               color="primary"
             >
               ADD ITEM TO LIST
@@ -222,4 +366,13 @@ class EventList extends React.Component {
   }
 }
 
-export default compose(withStyles(styles))(EventList);
+const mapStateToProps = state => {
+  return {
+    currentUserData: state.currentUserData
+  };
+};
+
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps)
+)(EventList);
