@@ -148,6 +148,12 @@ class EventList extends React.Component {
     }
   };
 
+  handleCheckOutSubmitOnEnter = e => {
+    if (e.key === "Enter") {
+      this.handleCheckOutSubmit();
+    }
+  };
+
   handleRemove = e => {
     firebase
       .database()
@@ -174,7 +180,6 @@ class EventList extends React.Component {
         id: itemId,
         ...this.props.eventData.list[itemId]
       };
-      console.log(addedItem);
       this.setState({
         checkedItems: [...this.state.checkedItems, addedItem]
       });
@@ -280,7 +285,8 @@ class EventList extends React.Component {
       dialogCheckOutOpen,
       checkOutValue,
       itemName,
-      itemQuantity
+      itemQuantity,
+      checkedItems
     } = this.state;
     return (
       <div>
@@ -301,7 +307,7 @@ class EventList extends React.Component {
             <Input
               id="checkout"
               className={classes.dialogTextField}
-              onKeyPress={this.handleSubmitOnEnter}
+              onKeyPress={this.handleCheckOutSubmitOnEnter}
               autoComplete="off"
               label="Total purchase price"
               type="number"
@@ -314,7 +320,7 @@ class EventList extends React.Component {
           <DialogActions>
             <Button
               onClick={this.handleCheckOutSubmit}
-              disabled={checkOutValue <= 0}
+              disabled={checkOutValue <= 0 || checkedItems.length === 0}
               color="primary"
             >
               CHECK OUT

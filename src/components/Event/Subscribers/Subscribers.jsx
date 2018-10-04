@@ -1,6 +1,7 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { compose } from "recompose";
-
+import { connect } from "react-redux";
+import firebase from "../../../firebase";
 import {
   withStyles,
   ExpansionPanel,
@@ -52,14 +53,16 @@ const StyledExpansionPanelSummary = withStyles({
 
 class Subscribers extends Component {
   renderSubscribers = () => {
-    return (
-      <Fragment>
-        <ExpansionPanel>
+    const { subscribersData } = this.props;
+    console.log(subscribersData);
+    return subscribersData.map(subscriber => {
+      return (
+        <ExpansionPanel key={subscriber.id}>
           <StyledExpansionPanelSummary>
             <div className={this.props.classes.avatarAndNick}>
               <Avatar>U</Avatar>
               <Typography className={this.props.classes.heading}>
-                User1
+                {subscriber.name}
               </Typography>
             </div>
             <div className={this.props.classes.totalAmountDiv}>
@@ -76,58 +79,43 @@ class Subscribers extends Component {
             </Typography>
           </ExpansionPanelDetails>
         </ExpansionPanel>
-        <ExpansionPanel>
-          <StyledExpansionPanelSummary>
-            <div className={this.props.classes.avatarAndNick}>
-              <Avatar>U</Avatar>
-              <Typography className={this.props.classes.heading}>
-                User1
-              </Typography>
-            </div>
-            <div className={this.props.classes.totalAmountDiv}>
-              <Typography className={this.props.classes.totalAmount}>
-                20,50 zł
-              </Typography>
-            </div>
-          </StyledExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </Typography>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <ExpansionPanel>
-          <StyledExpansionPanelSummary>
-            <div className={this.props.classes.avatarAndNick}>
-              <Avatar>U</Avatar>
-              <Typography className={this.props.classes.heading}>
-                User1
-              </Typography>
-            </div>
-            <div className={this.props.classes.totalAmountDiv}>
-              <Typography className={this.props.classes.totalAmount}>
-                20,50 zł
-              </Typography>
-            </div>
-          </StyledExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </Typography>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-      </Fragment>
-    );
+      );
+    });
   };
+
+  componentDidMount() {
+    if (this.props.eventData.id) {
+      this.props.eventData.users.map(userId => {
+        firebase
+          .database()
+          .ref(`/users/${userId}`)
+          .once("value")
+          .then(snap => {
+            console.log(snap.val());
+          });
+      });
+    }
+  }
 
   render() {
     const { classes } = this.props;
-    return <div className={classes.root}>{this.renderSubscribers()}</div>;
+    return (
+      <div className={classes.root}>
+        {this.props.eventData.name && this.props.subscribersData.length
+          ? this.renderSubscribers()
+          : null}
+      </div>
+    );
   }
 }
 
-export default compose(withStyles(styles))(Subscribers);
+const mapStateToProps = state => {
+  return {
+    subscribersData: state.subscribersData
+  };
+};
+
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps)
+)(Subscribers);

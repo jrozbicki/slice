@@ -9,6 +9,7 @@ export const ADD_EVENT = "ADD_EVENT";
 export const USER_LOGOUT = "USER_LOGOUT";
 export const DELETE_EVENT = "DELETE_EVENT";
 export const USUBSCRIBE_FROM_FIREBASE = "USUBSCRIBE_FROM_FIREBASE";
+export const SUBSCRIBERS_DATA = "SUBSCRIBERS_DATA";
 
 export const addCheckedOutItem = id => {
   return {
@@ -120,8 +121,31 @@ export const selectedEventData = id => {
             type: SELECTED_EVENT_DATA,
             payload: data
           });
+          dispatch(selectedEventSubscribersData(data.users));
         }
       });
+  };
+};
+
+export const selectedEventSubscribersData = usersIdArray => {
+  return dispatch => {
+    let subscribersData = [];
+    usersIdArray.map(userId => {
+      firebase
+        .database()
+        .ref(`/users/${userId}`)
+        .on("value", snapshot => {
+          if (snapshot.val()) {
+            dispatch({
+              type: SUBSCRIBERS_DATA,
+              payload: [
+                ...subscribersData,
+                Object.assign(snapshot.val(), { id: userId })
+              ]
+            });
+          }
+        });
+    });
   };
 };
 
