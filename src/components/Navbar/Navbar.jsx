@@ -15,7 +15,7 @@ import {
 
 import { Menu } from "@material-ui/icons";
 
-const drawerWidth = 240;
+const drawerWidth = 250;
 
 const styles = theme => ({
   root: {
@@ -39,6 +39,7 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
+    height: "100vh",
     [theme.breakpoints.up("md")]: {
       position: "relative"
     }

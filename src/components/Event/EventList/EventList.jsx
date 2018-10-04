@@ -27,6 +27,9 @@ import {
 import { Add, Delete, AttachMoney } from "@material-ui/icons";
 
 const styles = theme => ({
+  root: {
+    marginBottom: theme.spacing.unit * 3
+  },
   button: {
     marginBottom: theme.spacing.unit
   },
@@ -186,7 +189,7 @@ class EventList extends React.Component {
 
   renderCard = () => {
     return (
-      <Card>
+      <Card className={this.props.classes.root}>
         <CardContent>
           <Typography
             variant="headline"
