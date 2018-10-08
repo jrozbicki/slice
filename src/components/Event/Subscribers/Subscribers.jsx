@@ -67,7 +67,11 @@ class Subscribers extends Component {
             </div>
             <div className={this.props.classes.totalAmountDiv}>
               <Typography className={this.props.classes.totalAmount}>
-                20,50 zł
+                {`${
+                  subscriber.events[this.props.eventData.id].userTotal
+                    ? subscriber.events[this.props.eventData.id].userTotal
+                    : 0
+                } zł`}
               </Typography>
             </div>
           </StyledExpansionPanelSummary>

@@ -127,7 +127,7 @@ class DrawerMenu extends PureComponent {
   };
 
   handleEventSubmit = () => {
-    this.props.addEvent(this.props.userData.uid, this.state.eventName);
+    this.props.addEvent(this.props.userData.id, this.state.eventName);
     this.handleCloseDialog();
   };
 
@@ -138,7 +138,7 @@ class DrawerMenu extends PureComponent {
   };
 
   handleDeleteEvent = e => {
-    this.props.deleteEvent(this.props.userData.uid, e.currentTarget.id);
+    this.props.deleteEvent(this.props.userData.id, e.currentTarget.id);
   };
 
   render() {

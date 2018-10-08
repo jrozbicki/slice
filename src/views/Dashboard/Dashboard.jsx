@@ -11,7 +11,7 @@ import {
 class Dashboard extends Component {
   componentDidMount() {
     const user = JSON.parse(sessionStorage.getItem("userData"));
-    this.props.currentUserData(user);
+    this.props.currentUserData(user.uid);
     this.props.currentUserEvents(user.uid);
   }
 

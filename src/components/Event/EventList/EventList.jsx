@@ -116,21 +116,69 @@ class EventList extends React.Component {
     this.state.checkedItems.map(item => {
       return (items = { ...items, ...{ [item.id]: item } });
     });
-    const purchaseData = { items, price: this.state.checkOutValue };
+
+    let updatedUserTotal = 0;
+
+    if (this.props.currentUserData.events[this.props.eventData.id].userTotal) {
+      updatedUserTotal =
+        parseFloat(
+          this.props.currentUserData.events[this.props.eventData.id].userTotal,
+          10
+        ) + parseFloat(this.state.checkOutValue, 10);
+    } else {
+      updatedUserTotal = parseFloat(this.state.checkOutValue, 10);
+    }
+
+    let previousEventState = {};
+    if (this.props.currentUserData.events[this.props.eventData.id].purchases) {
+      previousEventState = {
+        ...this.props.currentUserData.events[this.props.eventData.id].purchases
+      };
+    }
+
+    const updatedUser = {
+      purchases: {
+        ...previousEventState,
+        [purchaseKey]: { items, price: this.state.checkOutValue }
+      },
+      userTotal: updatedUserTotal
+    };
 
     let updates = {};
-    updates[
-      `/users/${this.props.currentUserData.uid}/events/${
-        this.props.eventData.id
-      }/purchases/${purchaseKey}`
-    ] = purchaseData;
 
-    this.state.checkedItems.map(item => {
-      return (updates = {
-        ...updates,
-        ...{ [`/events/${this.props.eventData.id}/list/${item.id}`]: null }
-      });
+    updates[
+      `users/${this.props.currentUserData.id}/events/${this.props.eventData.id}`
+    ] = updatedUser;
+
+    let updatedEventTotal = 0;
+    if (this.props.eventData.eventTotal) {
+      updatedEventTotal =
+        parseFloat(this.props.eventData.eventTotal, 10) +
+        parseFloat(this.state.checkOutValue, 10);
+    } else {
+      updatedEventTotal = parseFloat(this.state.checkOutValue, 10);
+    }
+
+    let updatedListArray = [];
+    let checkedItemsIds = this.state.checkedItems.map(item => {
+      return item.id;
     });
+    updatedListArray = Object.entries(this.props.eventData.list).filter(
+      item => {
+        return !checkedItemsIds.includes(item[0]);
+      }
+    );
+
+    let updatedList = {};
+    updatedListArray.map(arr => {
+      updatedList = { ...updatedList, [arr[0]]: arr[1] };
+    });
+
+    updates[`/events/${this.props.eventData.id}`] = {
+      ...this.props.eventData,
+      list: updatedList,
+      eventTotal: updatedEventTotal
+    };
 
     firebase
       .database()

@@ -25,10 +25,17 @@ export const removeCheckedOutItem = id => {
   };
 };
 
-export const currentUserData = userData => {
-  return {
-    type: CURRENT_USER_DATA,
-    payload: userData
+export const currentUserData = userId => {
+  return dispatch => {
+    firebase
+      .database()
+      .ref(`/users/${userId}`)
+      .on("value", snap =>
+        dispatch({
+          type: CURRENT_USER_DATA,
+          payload: { id: userId, ...snap.val() }
+        })
+      );
   };
 };
 
