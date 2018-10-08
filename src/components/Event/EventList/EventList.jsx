@@ -138,8 +138,8 @@ class EventList extends React.Component {
 
     const updatedUser = {
       purchases: {
-        ...previousEventState,
-        [purchaseKey]: { items, price: this.state.checkOutValue }
+        [purchaseKey]: { items, price: this.state.checkOutValue },
+        ...previousEventState
       },
       userTotal: updatedUserTotal
     };

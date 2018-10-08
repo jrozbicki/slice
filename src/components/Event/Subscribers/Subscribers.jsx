@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import firebase from "../../../firebase";
@@ -8,7 +8,10 @@ import {
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   Typography,
-  Avatar
+  Avatar,
+  List,
+  ListItem,
+  Divider
 } from "@material-ui/core";
 
 const styles = theme => ({
@@ -42,6 +45,15 @@ const styles = theme => ({
     color: "green",
     fontSize: theme.typography.pxToRem(18),
     fontWeight: theme.typography.fontWeightRegular
+  },
+  listFlex: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%"
+  },
+  userPurchaseList: {
+    width: "100%"
   }
 });
 
@@ -54,13 +66,12 @@ const StyledExpansionPanelSummary = withStyles({
 class Subscribers extends Component {
   renderSubscribers = () => {
     const { subscribersData } = this.props;
-    console.log(subscribersData);
     return subscribersData.map(subscriber => {
       return (
         <ExpansionPanel key={subscriber.id}>
           <StyledExpansionPanelSummary>
             <div className={this.props.classes.avatarAndNick}>
-              <Avatar>U</Avatar>
+              <Avatar>{subscriber.name.substr(0, 1)}</Avatar>
               <Typography className={this.props.classes.heading}>
                 {subscriber.name}
               </Typography>
@@ -76,13 +87,39 @@ class Subscribers extends Component {
             </div>
           </StyledExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </Typography>
+            <List className={this.props.classes.userPurchaseList}>
+              {subscriber.events[this.props.eventData.id].purchases
+                ? this.renderSubscribersPurchasedLists(
+                    subscriber.events[this.props.eventData.id]
+                  )
+                : null}
+            </List>
           </ExpansionPanelDetails>
         </ExpansionPanel>
+      );
+    });
+  };
+
+  renderSubscribersPurchasedLists = event => {
+    return Object.entries(event.purchases).map(purchase => {
+      return (
+        <Fragment key={purchase[0]}>
+          <List className={this.props.classes.listFlex}>
+            <div>{this.renderPurchaseItems(purchase)}</div>
+            <div>{`${purchase[1].price} zł`}</div>
+          </List>
+          <Divider />
+        </Fragment>
+      );
+    });
+  };
+
+  renderPurchaseItems = purchase => {
+    return Object.entries(purchase[1].items).map(item => {
+      return (
+        <ListItem key={item[1].id}>{`${item[1].name} x${
+          item[1].quantity
+        }`}</ListItem>
       );
     });
   };
