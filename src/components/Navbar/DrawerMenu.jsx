@@ -220,7 +220,7 @@ class DrawerMenu extends PureComponent {
         <Divider />
 
         <List>
-          <ListItem button>
+          <ListItem button disabled={true}>
             <ListItemIcon>
               <Settings />
             </ListItemIcon>

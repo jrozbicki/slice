@@ -89,6 +89,7 @@ class SignUpForm extends Component {
           .ref("/users")
           .child(user.uid)
           .set({
+            id: user.uid,
             name: this.state.name,
             email: user.email,
             privilages: {

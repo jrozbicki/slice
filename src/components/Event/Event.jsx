@@ -6,19 +6,25 @@ import { connect } from "react-redux";
 import { selectedEventData } from "../../actions";
 
 class Event extends Component {
+  renderEvent = () => {
+    if (this.props.eventData.id) {
+      return (
+        <Fragment>
+          <EventList
+            eventData={this.props.eventData}
+            selectedEventData={this.props.selectedEventData}
+          />
+          <Subscribers
+            eventData={this.props.eventData}
+            selectedEventData={this.props.selectedEventData}
+          />
+        </Fragment>
+      );
+    }
+  };
+
   render() {
-    return (
-      <Fragment>
-        <EventList
-          eventData={this.props.eventData}
-          selectedEventData={this.props.selectedEventData}
-        />
-        <Subscribers
-          eventData={this.props.eventData}
-          selectedEventData={this.props.selectedEventData}
-        />
-      </Fragment>
-    );
+    return <Fragment>{this.renderEvent()}</Fragment>;
   }
 }
 

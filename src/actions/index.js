@@ -10,6 +10,7 @@ export const USER_LOGOUT = "USER_LOGOUT";
 export const DELETE_EVENT = "DELETE_EVENT";
 export const USUBSCRIBE_FROM_FIREBASE = "USUBSCRIBE_FROM_FIREBASE";
 export const SUBSCRIBERS_DATA = "SUBSCRIBERS_DATA";
+export const INVITE_FRIEND_TO_EVENT = "INVITE_FRIEND_TO_EVENT";
 
 export const addCheckedOutItem = id => {
   return {
@@ -41,15 +42,16 @@ export const currentUserData = userId => {
 
 export const addEvent = (userId, name) => {
   return dispatch => {
-    const eventData = {
-      name: name,
-      users: [userId]
-    };
-
     const key = firebase
       .database()
       .ref()
       .push().key;
+
+    const eventData = {
+      id: key,
+      name: name,
+      users: [userId]
+    };
 
     let updates = {};
     updates[`/events/${key}`] = eventData;
@@ -59,9 +61,7 @@ export const addEvent = (userId, name) => {
       .database()
       .ref()
       .update(updates);
-    // .then(() => {
-    //   dispatch(currentUserEvents(userId));
-    // });
+
     return {
       type: ADD_EVENT
     };
@@ -152,6 +152,59 @@ export const selectedEventSubscribersData = usersIdArray => {
             });
           }
         });
+    });
+  };
+};
+
+const getUserDataByEmail = email => {
+  return firebase
+    .database()
+    .ref("/users")
+    .orderByChild("email")
+    .equalTo(email)
+    .once("value")
+    .then(snap => Object.entries(snap.val())[0][1]);
+};
+
+const getEventDataByEventId = eventId => {
+  return firebase
+    .database()
+    .ref("/events")
+    .child(eventId)
+    .once("value")
+    .then(snap => snap.val());
+};
+
+const updateEventAndUser = (eventData, userData) => {
+  const updates = {};
+  if (!eventData.users.includes(userData.id)) {
+    eventData = { ...eventData, ["users"]: [...eventData.users, userData.id] };
+    updates[`/events/${eventData.id}`] = eventData;
+    userData = {
+      ...userData,
+      events: { ...userData.events, [eventData.id]: true }
+    };
+    updates[`/users/${userData.id}`] = userData;
+
+    firebase
+      .database()
+      .ref()
+      .update(updates);
+  }
+};
+
+export const inviteFriendByEmail = (email, eventId) => {
+  return dispatch => {
+    dispatch(() => {
+      getUserDataByEmail(email).then(userData => {
+        getEventDataByEventId(eventId).then(eventData => {
+          updateEventAndUser(eventData, userData);
+        });
+      });
+    });
+
+    dispatch({
+      type: INVITE_FRIEND_TO_EVENT
     });
   };
 };

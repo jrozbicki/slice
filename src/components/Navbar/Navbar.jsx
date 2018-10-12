@@ -2,18 +2,22 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core";
 import firebase from "../../firebase";
 import DrawerMenu from "./DrawerMenu";
+import EventSettings from "./EventSettings";
 
 import {
   AppBar,
   Toolbar,
   IconButton,
   Typography,
+  Menu,
+  MenuItem,
   Hidden,
   Drawer,
   SwipeableDrawer
 } from "@material-ui/core";
 
-import { Menu } from "@material-ui/icons";
+import { MoreVert } from "@material-ui/icons";
+import MenuIcon from "@material-ui/icons/Menu";
 
 const drawerWidth = 250;
 
@@ -93,11 +97,9 @@ class Navbar extends Component {
               onClick={this.handleDrawerToggle}
               className={classes.navIconHide}
             >
-              <Menu />
+              <MenuIcon />
             </IconButton>
-            <Typography variant="title" color="inherit" noWrap>
-              Slice
-            </Typography>
+            <EventSettings />
           </Toolbar>
         </AppBar>
         <Hidden mdUp>
