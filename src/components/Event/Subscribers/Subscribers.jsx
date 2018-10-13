@@ -67,6 +67,7 @@ class Subscribers extends Component {
   renderSubscribers = () => {
     const { subscribersData } = this.props;
     return subscribersData.map(subscriber => {
+      console.log("before render subscribers", subscriber);
       return (
         <ExpansionPanel key={subscriber.id}>
           <StyledExpansionPanelSummary>
@@ -79,6 +80,7 @@ class Subscribers extends Component {
             <div className={this.props.classes.totalAmountDiv}>
               <Typography className={this.props.classes.totalAmount}>
                 {`${
+                  subscriber.events[this.props.eventData.id] &&
                   subscriber.events[this.props.eventData.id].userTotal
                     ? subscriber.events[this.props.eventData.id].userTotal
                     : 0
@@ -88,7 +90,8 @@ class Subscribers extends Component {
           </StyledExpansionPanelSummary>
           <ExpansionPanelDetails>
             <List className={this.props.classes.userPurchaseList}>
-              {subscriber.events[this.props.eventData.id].purchases
+              {subscriber.events[this.props.eventData.id] &&
+              subscriber.events[this.props.eventData.id].purchases
                 ? this.renderSubscribersPurchasedLists(
                     subscriber.events[this.props.eventData.id]
                   )
@@ -124,19 +127,18 @@ class Subscribers extends Component {
     });
   };
 
-  componentDidMount() {
-    if (this.props.eventData.id) {
-      this.props.eventData.users.map(userId => {
-        firebase
-          .database()
-          .ref(`/users/${userId}`)
-          .once("value")
-          .then(snap => {
-            console.log(snap.val());
-          });
-      });
-    }
-  }
+  // componentDidMount() {
+  //   if (this.props.eventData.id) {
+  //     // eslint-disable-next-line
+  //     this.props.eventData.users.map(userId => {
+  //       console.log("comp did mount", userId);
+  //       firebase
+  //         .database()
+  //         .ref(`/users/${userId}`)
+  //         .on("value", snap => snap.val());
+  //     });
+  //   }
+  // }
 
   render() {
     const { classes } = this.props;

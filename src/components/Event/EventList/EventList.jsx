@@ -114,7 +114,12 @@ class EventList extends React.Component {
 
     let items = {};
     this.state.checkedItems.map(item => {
-      return (items = { ...items, ...{ [item.id]: item } });
+      return (items = {
+        ...items,
+        ...{
+          [item.id]: item
+        }
+      });
     });
 
     let updatedUserTotal = 0;
@@ -170,8 +175,12 @@ class EventList extends React.Component {
     );
 
     let updatedList = {};
+    // eslint-disable-next-line
     updatedListArray.map(arr => {
-      updatedList = { ...updatedList, [arr[0]]: arr[1] };
+      updatedList = {
+        ...updatedList,
+        [arr[0]]: arr[1]
+      };
     });
 
     updates[`/events/${this.props.eventData.id}`] = {
@@ -185,7 +194,10 @@ class EventList extends React.Component {
       .ref()
       .update(updates);
 
-    this.setState({ checkedItems: [], checkOutValue: 0 });
+    this.setState({
+      checkedItems: [],
+      checkOutValue: 0
+    });
     this.props.selectedEventData(this.props.eventData.id);
     this.handleDialogCheckOutClose();
   };

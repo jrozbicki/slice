@@ -8,15 +8,11 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Typography,
-  Menu,
-  MenuItem,
   Hidden,
   Drawer,
   SwipeableDrawer
 } from "@material-ui/core";
 
-import { MoreVert } from "@material-ui/icons";
 import MenuIcon from "@material-ui/icons/Menu";
 
 const drawerWidth = 250;

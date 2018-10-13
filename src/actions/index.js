@@ -68,22 +68,24 @@ export const addEvent = (userId, name) => {
   };
 };
 
-export const deleteEvent = (userId, eventId) => {
+export const deleteEvent = (arrayUsersId, currentUserId, eventId) => {
   return dispatch => {
     const updates = {};
-    updates[`/events/${eventId}`] = null;
-    updates[`users/${userId}/events/${eventId}`] = null;
+    // eslint-disable-next-line
+    arrayUsersId.map(userId => {
+      updates[`/events/${eventId}`] = null;
+      updates[`users/${userId}/events/${eventId}`] = null;
+    });
 
     firebase
       .database()
       .ref()
       .update(updates)
       .then(() => {
-        dispatch(currentUserEvents(userId));
+        // eslint-disable-next-line
+        dispatch(currentUserEvents(currentUserId));
       });
-    return {
-      type: DELETE_EVENT
-    };
+    return { type: DELETE_EVENT };
   };
 };
 
@@ -136,22 +138,20 @@ export const selectedEventData = id => {
 
 export const selectedEventSubscribersData = usersIdArray => {
   return dispatch => {
-    let subscribersData = [];
-    usersIdArray.map(userId => {
-      firebase
-        .database()
-        .ref(`/users/${userId}`)
-        .on("value", snapshot => {
-          if (snapshot.val()) {
-            dispatch({
-              type: SUBSCRIBERS_DATA,
-              payload: [
-                ...subscribersData,
-                Object.assign(snapshot.val(), { id: userId })
-              ]
-            });
-          }
-        });
+    Promise.all(
+      usersIdArray.map(userId => {
+        return firebase
+          .database()
+          .ref(`/users`)
+          .child(userId)
+          .once("value")
+          .then(snapshot => snapshot.val());
+      })
+    ).then(values => {
+      dispatch({
+        type: SUBSCRIBERS_DATA,
+        payload: values
+      });
     });
   };
 };
@@ -178,7 +178,7 @@ const getEventDataByEventId = eventId => {
 const updateEventAndUser = (eventData, userData) => {
   const updates = {};
   if (!eventData.users.includes(userData.id)) {
-    eventData = { ...eventData, ["users"]: [...eventData.users, userData.id] };
+    eventData = { ...eventData, users: [...eventData.users, userData.id] };
     updates[`/events/${eventData.id}`] = eventData;
     userData = {
       ...userData,
@@ -186,7 +186,7 @@ const updateEventAndUser = (eventData, userData) => {
     };
     updates[`/users/${userData.id}`] = userData;
 
-    firebase
+    return firebase
       .database()
       .ref()
       .update(updates);
@@ -202,7 +202,6 @@ export const inviteFriendByEmail = (email, eventId) => {
         });
       });
     });
-
     dispatch({
       type: INVITE_FRIEND_TO_EVENT
     });
