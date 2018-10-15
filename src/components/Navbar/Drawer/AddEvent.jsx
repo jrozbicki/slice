@@ -18,6 +18,7 @@ import {
 import { Add } from "@material-ui/icons";
 import { styles } from "./drawer-styles";
 
+// class component that handle adding event
 class AddEvent extends Component {
   constructor(props) {
     super(props);
@@ -28,10 +29,12 @@ class AddEvent extends Component {
     };
   }
 
+  // opens dialog on button click
   handleOpenDialog = () => {
     this.setState({ dialogOpen: true });
   };
 
+  // is invoked when dialog is closing
   handleCloseDialog = () => {
     this.setState({
       eventName: "",
@@ -39,17 +42,20 @@ class AddEvent extends Component {
     });
   };
 
+  // calling action addEvent and closes dialog
   handleEventSubmit = () => {
     this.props.addEvent(this.props.userData.id, this.state.eventName);
     this.handleCloseDialog();
   };
 
+  // handles submission on enter press
   handleEventSubmitOnEnter = e => {
     if (e.key === "Enter") {
       this.handleEventSubmit();
     }
   };
 
+  // renders button and dialog
   render() {
     const { classes } = this.props;
     const { dialogOpen, eventName } = this.state;

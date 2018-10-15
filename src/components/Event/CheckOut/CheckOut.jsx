@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { compose } from "recompose";
 import { connect } from "react-redux";
-import { styles } from "./checkout-styles";
+
 import firebase from "../../../firebase";
 import { selectedEventData } from "../../../store/actions/event";
 
@@ -19,7 +19,9 @@ import {
 } from "@material-ui/core";
 
 import { AttachMoney } from "@material-ui/icons";
+import { styles } from "./checkout-styles";
 
+// class component that renders Checkout Button and dialog
 class CheckOut extends Component {
   constructor(props) {
     super(props);
@@ -30,14 +32,17 @@ class CheckOut extends Component {
     };
   }
 
+  // handles Button onClick and opens dialog
   handleCheckOutOpen = () => {
     this.setState({ dialogCheckOutOpen: true });
   };
 
+  // closes dialog and resets state
   handleDialogCheckOutClose = () => {
-    this.setState({ dialogCheckOutOpen: false });
+    this.setState({ dialogCheckOutOpen: false, checkOutValue: 0 });
   };
 
+  // function that is responsible for submiting data do db
   handleCheckOutSubmit = () => {
     const {
       checkedItems,
@@ -48,58 +53,48 @@ class CheckOut extends Component {
 
     const { checkOutValue } = this.state;
 
+    // get unique key from db
     const purchaseKey = firebase
       .database()
       .ref()
       .push().key;
 
+    // set up items object
     let items = {};
     checkedItems.map(item => {
       return (items = {
-        ...items,
         ...{
           [item.id]: item
-        }
+        },
+        ...items
       });
     });
 
-    let updatedUserTotal = 0;
+    // calculate users total purchases value into updatedUserTotal variable
+    const { userTotal } = currentUserData.events[eventData.id];
+    const updatedUserTotal =
+      parseFloat(userTotal, 10) + parseFloat(checkOutValue, 10);
 
-    if (currentUserData.events[eventData.id].userTotal) {
-      updatedUserTotal =
-        parseFloat(currentUserData.events[eventData.id].userTotal, 10) +
-        parseFloat(checkOutValue, 10);
-    } else {
-      updatedUserTotal = parseFloat(checkOutValue, 10);
-    }
-
-    let previousEventState = {};
-    if (currentUserData.events[eventData.id].purchases) {
-      previousEventState = {
-        ...currentUserData.events[eventData.id].purchases
-      };
-    }
-
+    // set up updated user data
+    const { purchases } = currentUserData.events[eventData.id];
     const updatedUser = {
       purchases: {
         [purchaseKey]: { items, price: checkOutValue },
-        ...previousEventState
+        ...purchases
       },
       userTotal: updatedUserTotal
     };
 
+    // prepare user updates
     let updates = {};
-
     updates[`users/${currentUserData.id}/events/${eventData.id}`] = updatedUser;
 
-    let updatedEventTotal = 0;
-    if (eventData.eventTotal) {
-      updatedEventTotal =
-        parseFloat(eventData.eventTotal, 10) + parseFloat(checkOutValue, 10);
-    } else {
-      updatedEventTotal = parseFloat(checkOutValue, 10);
-    }
+    // calculate event total purchases value into updatedEventTotal variable
+    const { eventTotal } = eventData;
+    const updatedEventTotal =
+      parseFloat(eventTotal, 10) + parseFloat(checkOutValue, 10);
 
+    // remove checked items from eventData.list
     let updatedListArray = [];
     let checkedItemsIds = checkedItems.map(item => {
       return item.id;
@@ -108,6 +103,7 @@ class CheckOut extends Component {
       return !checkedItemsIds.includes(item[0]);
     });
 
+    // set up updated list obj
     let updatedList = {};
     // eslint-disable-next-line
     updatedListArray.map(arr => {
@@ -117,32 +113,35 @@ class CheckOut extends Component {
       };
     });
 
+    // prepare eventData.list update
     updates[`/events/${eventData.id}`] = {
       ...eventData,
       list: updatedList,
       eventTotal: updatedEventTotal
     };
 
+    // send updates
     firebase
       .database()
       .ref()
       .update(updates);
 
-    this.setState({
-      checkedItems: [],
-      checkOutValue: 0
-    });
+    // invoke pulling new data to redux
     selectedEventData(eventData.id);
+    // invoke clearing state in parent component
     this.props.clearCheckedItems();
+    // close dialog and clear state
     this.handleDialogCheckOutClose();
   };
 
+  // handles submitting purchase on enter press
   handleCheckOutSubmitOnEnter = e => {
     if (e.key === "Enter") {
       this.handleCheckOutSubmit();
     }
   };
 
+  // renders checkout list inside dialog
   renderCheckOutList = () => {
     const { classes, eventData, checkedItems } = this.props;
     return checkedItems.map(item => {
@@ -156,6 +155,7 @@ class CheckOut extends Component {
     });
   };
 
+  // main render function
   render() {
     const { classes, checkedItems } = this.props;
     const { dialogCheckOutOpen, checkOutValue } = this.state;
@@ -212,6 +212,7 @@ class CheckOut extends Component {
   }
 }
 
+// pulls data from
 const mapStateToProps = state => {
   return {
     currentUserData: state.currentUserData,

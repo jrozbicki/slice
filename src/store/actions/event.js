@@ -16,12 +16,18 @@ export const addEvent = (userId, name) => {
     const eventData = {
       id: key,
       name: name,
-      users: [userId]
+      users: [userId],
+      eventTotal: 0
+    };
+
+    const userDataAboutEvent = {
+      purchases: true,
+      userTotal: 0
     };
 
     let updates = {};
     updates[`/events/${key}`] = eventData;
-    updates[`/users/${userId}/events/${key}`] = true;
+    updates[`/users/${userId}/events/${key}`] = userDataAboutEvent;
 
     firebase
       .database()

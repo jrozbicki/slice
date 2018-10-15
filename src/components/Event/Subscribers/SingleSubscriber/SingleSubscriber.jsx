@@ -28,18 +28,21 @@ const SingleSubscriber = props => {
   };
 
   // renders all purchases for single subscriber
+  // in reversed order
   const renderSubscriberPurchases = event => {
-    return Object.entries(event.purchases).map(purchase => {
-      return (
-        <Fragment key={purchase[0]}>
-          <List className={classes.listFlex}>
-            <div>{renderSinglePurchase(purchase)}</div>
-            <div>{`${purchase[1].price} zł`}</div>
-          </List>
-          <Divider />
-        </Fragment>
-      );
-    });
+    return Object.entries(event.purchases)
+      .reverse()
+      .map(purchase => {
+        return (
+          <Fragment key={purchase[0]}>
+            <List className={classes.listFlex}>
+              <div>{renderSinglePurchase(purchase)}</div>
+              <div>{`${purchase[1].price} zł`}</div>
+            </List>
+            <Divider />
+          </Fragment>
+        );
+      });
   };
 
   // renders expansion panel for single subscriber with total price

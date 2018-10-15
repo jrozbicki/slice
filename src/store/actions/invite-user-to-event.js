@@ -28,7 +28,10 @@ const updateEventAndUser = (eventData, userData) => {
     updates[`/events/${eventData.id}`] = eventData;
     userData = {
       ...userData,
-      events: { ...userData.events, [eventData.id]: true }
+      events: {
+        ...userData.events,
+        [eventData.id]: { purchases: true, userTotal: 0 }
+      }
     };
     updates[`/users/${userData.id}`] = userData;
 
