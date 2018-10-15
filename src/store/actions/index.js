@@ -1,4 +1,4 @@
-import firebase from "../firebase";
+import firebase from "../../firebase";
 
 export const ADD_CHECKEDOUT_ITEM = "ADD_CHECKEDOUT_ITEM";
 export const REMOVE_CHECKEDOUT_ITEM = "REMOVE_CHECKEDOUT_ITEM";

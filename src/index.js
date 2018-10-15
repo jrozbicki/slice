@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import "./styles/style.css";
 import registerServiceWorker from "./registerServiceWorker";
-import reducers from "./reducers";
+import reducers from "./store/reducers";
 import Dashboard from "./views/Dashboard/Dashboard";
 import Login from "./views/Login/Login";
 import SignUp from "./views/SignUp/SignUp";

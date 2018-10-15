@@ -9,7 +9,7 @@ import {
   addEvent,
   deleteEvent,
   userLogout
-} from "../../actions";
+} from "../../store/actions";
 
 import {
   ListItem,

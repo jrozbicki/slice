@@ -4,6 +4,8 @@ import firebase from "../../firebase";
 import DrawerMenu from "./DrawerMenu";
 import EventSettings from "./EventSettings";
 
+import { styles } from "./navbar-styles";
+
 import {
   AppBar,
   Toolbar,
@@ -14,48 +16,6 @@ import {
 } from "@material-ui/core";
 
 import MenuIcon from "@material-ui/icons/Menu";
-
-const drawerWidth = 250;
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    height: "100vh",
-    zIndex: 1,
-    overflowX: "hidden",
-    position: "relative",
-    display: "flex",
-    width: "100%"
-  },
-  appBar: {
-    position: "absolute",
-    zIndex: theme.zIndex.drawer + 1
-  },
-  navIconHide: {
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-    height: "100vh",
-    [theme.breakpoints.up("md")]: {
-      position: "relative"
-    }
-  },
-  content: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3
-  },
-  flex: {
-    justifyContent: "space-between"
-  },
-  formControl: {
-    minWidth: 120
-  }
-});
 
 class Navbar extends Component {
   state = {
@@ -108,6 +68,7 @@ class Navbar extends Component {
             ModalProps={
               { keepMounted: true } // Better open performance on mobile.
             }
+            hysteresis={0.3}
           >
             <div
               tabIndex={0}

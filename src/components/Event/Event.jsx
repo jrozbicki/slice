@@ -1,32 +1,29 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 import EventList from "./EventList/EventList";
 import Subscribers from "./Subscribers/Subscribers";
 import { compose } from "recompose";
 import { connect } from "react-redux";
-import { selectedEventData } from "../../actions";
+import { selectedEventData } from "../../store/actions";
 
-class Event extends Component {
-  renderEvent = () => {
-    if (this.props.eventData.id) {
-      return (
-        <Fragment>
-          <EventList
-            eventData={this.props.eventData}
-            selectedEventData={this.props.selectedEventData}
-          />
-          <Subscribers
-            eventData={this.props.eventData}
-            selectedEventData={this.props.selectedEventData}
-          />
-        </Fragment>
-      );
-    }
-  };
-
-  render() {
-    return <Fragment>{this.renderEvent()}</Fragment>;
+// functional component that renders event with list and subscribers data
+const Event = props => {
+  const { eventData, selectedEventData } = props;
+  if (eventData.id) {
+    return (
+      <Fragment>
+        <EventList
+          eventData={eventData}
+          selectedEventData={selectedEventData}
+        />
+        <Subscribers
+          eventData={eventData}
+          selectedEventData={selectedEventData}
+        />
+      </Fragment>
+    );
   }
-}
+  return null;
+};
 
 const mapStateToProps = state => {
   return {

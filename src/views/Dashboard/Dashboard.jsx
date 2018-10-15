@@ -6,7 +6,7 @@ import {
   currentUserData,
   currentUserEvents,
   unsubscribeFirebase
-} from "../../actions";
+} from "../../store/actions";
 
 class Dashboard extends Component {
   componentDidMount() {

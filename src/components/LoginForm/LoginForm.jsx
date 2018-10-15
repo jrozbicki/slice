@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import firebase from "../../firebase";
 import { compose } from "recompose";
 import { connect } from "react-redux";
-import { currentUserData, currentUserEvents } from "../../actions";
+import { currentUserData, currentUserEvents } from "../../store/actions";
 
 import { LoginFormWrapper } from "./styles";
 import Avatar from "@material-ui/core/Avatar";
