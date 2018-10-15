@@ -1,12 +1,10 @@
 import { combineReducers } from "redux";
-import CheckOutItemsReducer from "./reducer_checked_out_items";
-import CurrentUserDataReducer from "./reducer_userData";
-import CurrentUserEventsReducer from "./reducer_events";
-import SelectedEventDataReducer from "./reducer_event_data";
-import SubscribersDataReducer from "./reducer_subscribers_data";
+import CurrentUserDataReducer from "./reducer_user";
+import CurrentUserEventsReducer from "./reducer_user_events";
+import SelectedEventDataReducer from "./reducer_event";
+import SubscribersDataReducer from "./reducer_subscribers";
 
 const appReducer = combineReducers({
-  checkedOutItems: CheckOutItemsReducer,
   currentUserData: CurrentUserDataReducer,
   currentUserEvents: CurrentUserEventsReducer,
   eventData: SelectedEventDataReducer,

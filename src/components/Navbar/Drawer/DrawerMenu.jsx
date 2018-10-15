@@ -1,15 +1,13 @@
 import React, { PureComponent } from "react";
-import firebase from "../../firebase";
+import firebase from "../../../firebase";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 
-import {
-  selectedEventData,
-  addEvent,
-  deleteEvent,
-  userLogout
-} from "../../store/actions";
+import { userLogout } from "../../../store/actions/user";
+import { deleteEvent, selectedEventData } from "../../../store/actions/event";
+
+import AddEvent from "./AddEvent";
 
 import {
   ListItem,
@@ -20,49 +18,29 @@ import {
   List,
   Hidden,
   Collapse,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  DialogActions,
-  Button,
   ListItemSecondaryAction,
   IconButton,
   withStyles
 } from "@material-ui/core";
 
 import {
-  Inbox,
-  Add,
   Settings,
   PowerSettingsNew,
   ExpandLess,
   ExpandMore,
-  Star,
+  Dns,
+  Assignment,
   Delete
 } from "@material-ui/icons";
 
-const styles = theme => ({
-  toolbar: theme.mixins.toolbar,
-  nested: {
-    paddingLeft: theme.spacing.unit * 4
-  },
-  dialogTitle: {
-    textAlign: "center"
-  },
-  dialogTextField: {
-    width: "100%"
-  }
-});
+import { styles } from "./drawer-styles";
 
 class DrawerMenu extends PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      eventsOpen: false,
-      dialogOpen: false,
-      eventName: ""
+      eventsOpen: false
     };
   }
 
@@ -84,6 +62,15 @@ class DrawerMenu extends PureComponent {
     this.props.closeDrawer();
   };
 
+  handleDeleteEvent = e => {
+    this.props.deleteEvent(
+      this.props.events[e.currentTarget.id].users,
+      this.props.userData.id,
+      e.currentTarget.id
+    );
+  };
+
+  // renders nested events list
   renderEvents = () => {
     const { events } = this.props;
     if (events) {
@@ -97,7 +84,7 @@ class DrawerMenu extends PureComponent {
             onClick={this.loadEvent}
           >
             <ListItemIcon>
-              <Star />
+              <Assignment />
             </ListItemIcon>
             <ListItemText inset primary={events[keyName].name} />
             <ListItemSecondaryAction>
@@ -115,36 +102,7 @@ class DrawerMenu extends PureComponent {
     }
   };
 
-  handleOpenDialog = () => {
-    this.setState({ dialogOpen: true });
-  };
-
-  handleCloseDialog = () => {
-    this.setState({
-      eventName: "",
-      dialogOpen: false
-    });
-  };
-
-  handleEventSubmit = () => {
-    this.props.addEvent(this.props.userData.id, this.state.eventName);
-    this.handleCloseDialog();
-  };
-
-  handleEventSubmitOnEnter = e => {
-    if (e.key === "Enter") {
-      this.handleEventSubmit();
-    }
-  };
-
-  handleDeleteEvent = e => {
-    this.props.deleteEvent(
-      this.props.events[e.currentTarget.id].users,
-      this.props.userData.id,
-      e.currentTarget.id
-    );
-  };
-
+  // renders drawer
   render() {
     const { classes, userData } = this.props;
     return (
@@ -152,7 +110,7 @@ class DrawerMenu extends PureComponent {
         <Hidden smDown>
           <div className={classes.toolbar} />
         </Hidden>
-
+        {/* Avatar and user alias */}
         <List>
           <ListItem>
             <Avatar>
@@ -163,66 +121,26 @@ class DrawerMenu extends PureComponent {
         </List>
 
         <Divider />
-
+        {/* Events nested list */}
         <List>
           <ListItem button onClick={this.handleEventNestedList}>
             <ListItemIcon>
-              <Inbox />
+              <Dns />
             </ListItemIcon>
             <ListItemText inset primary="Events" />
             {this.state.eventsOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
           <Collapse in={this.state.eventsOpen} timeoute="auto">
             <List>{this.renderEvents()}</List>
+            {/* Add event module */}
             <List>
-              <ListItem button onClick={this.handleOpenDialog}>
-                <ListItemIcon>
-                  <Add />
-                </ListItemIcon>
-                <ListItemText primary="Add new event" />
-              </ListItem>
+              <AddEvent userData={userData} />
             </List>
           </Collapse>
         </List>
 
-        <Dialog
-          open={this.state.dialogOpen}
-          onClose={this.handleCloseDialog}
-          aria-labelledby="add-event"
-        >
-          <DialogTitle id="add-event" className={classes.dialogTitle}>
-            Add event
-          </DialogTitle>
-
-          <DialogContent>
-            <TextField
-              autoFocus
-              required
-              className={classes.dialogTextField}
-              autoComplete="off"
-              id="name"
-              label="Event name"
-              helperText="Set meaningfull name!"
-              type="text"
-              value={this.state.eventName}
-              onChange={e => this.setState({ eventName: e.target.value })}
-              onKeyPress={this.handleEventSubmitOnEnter}
-            />
-          </DialogContent>
-
-          <DialogActions>
-            <Button
-              onClick={this.handleEventSubmit}
-              disabled={this.state.eventName === ""}
-              color="primary"
-            >
-              ADD EVENT
-            </Button>
-          </DialogActions>
-        </Dialog>
-
         <Divider />
-
+        {/* Settings and Logout */}
         <List>
           <ListItem button disabled={true}>
             <ListItemIcon>
@@ -244,6 +162,7 @@ class DrawerMenu extends PureComponent {
   }
 }
 
+// pulls user data
 const mapStateToProps = state => {
   return {
     userData: state.currentUserData,
@@ -256,6 +175,6 @@ export default compose(
   withRouter,
   connect(
     mapStateToProps,
-    { selectedEventData, addEvent, deleteEvent, userLogout }
+    { selectedEventData, deleteEvent, userLogout }
   )
 )(DrawerMenu);

@@ -6,6 +6,7 @@ import { withStyles } from "@material-ui/core";
 import { styles } from "./subscribers-style";
 import SingleSubscriber from "./SingleSubscriber/SingleSubscriber";
 
+// functional component that renders Subscribers module
 const Subscribers = props => {
   const { classes, subscribersData, eventData } = props;
 
@@ -30,6 +31,7 @@ const Subscribers = props => {
   );
 };
 
+// pulling subscribers data from redux state
 const mapStateToProps = state => {
   return {
     subscribersData: state.subscribersData

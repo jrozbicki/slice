@@ -3,7 +3,7 @@ import { compose } from "recompose";
 import { connect } from "react-redux";
 import { styles } from "./checkout-styles";
 import firebase from "../../../firebase";
-import { selectedEventData } from "../../../store/actions";
+import { selectedEventData } from "../../../store/actions/event";
 
 import {
   Dialog,
@@ -145,7 +145,6 @@ class CheckOut extends Component {
 
   renderCheckOutList = () => {
     const { classes, eventData, checkedItems } = this.props;
-    console.log(eventData, checkedItems);
     return checkedItems.map(item => {
       return (
         <ListItem className={classes.dialogCheckOutListItem} key={item.id}>

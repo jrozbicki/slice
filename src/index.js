@@ -13,6 +13,7 @@ import SignUp from "./views/SignUp/SignUp";
 import requireAuth from "./components/HOC/RequireAuth/requireAuth";
 import thunk from "redux-thunk";
 import logger from "redux-logger";
+
 const createStoreWithMiddleware = applyMiddleware(thunk, logger)(createStore);
 
 ReactDOM.render(

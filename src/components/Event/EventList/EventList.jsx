@@ -1,11 +1,8 @@
-import React from "react";
-import { compose } from "recompose";
+import React, { Component } from "react";
 import firebase from "../../../firebase";
-import { connect } from "react-redux";
 
 import AddItem from "../AddItem/AddItem";
 import CheckOut from "../CheckOut/CheckOut";
-import { selectedEventData } from "../../../store/actions";
 import {
   Card,
   CardContent,
@@ -21,18 +18,25 @@ import {
 import { Delete } from "@material-ui/icons";
 import { styles } from "./eventlist-styles";
 
-class EventList extends React.Component {
-  state = {
-    dialogAddOpen: false,
-    dialogCheckOutOpen: false,
-    itemName: "",
-    itemQuantity: 1,
-    checkedItems: [],
-    checkOutValue: ""
-  };
+// class component that renders List with Add and CheckOut buttons
+class EventList extends Component {
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      dialogAddOpen: false,
+      dialogCheckOutOpen: false,
+      itemName: "",
+      itemQuantity: 1,
+      checkedItems: [],
+      checkOutValue: ""
+    };
+  }
+
+  // function removes item after clicking on thrash icon
   removeFromList = e => {
     const { eventData, selectedEventData } = this.props;
+    this.removeFromCheckedItems(e.currentTarget.id);
     firebase
       .database()
       .ref(`/events/${eventData.id}/list/${e.currentTarget.id}`)
@@ -40,41 +44,50 @@ class EventList extends React.Component {
     selectedEventData(eventData.id);
   };
 
+  // removes item of *id* from checkedItems state property
+  removeFromCheckedItems = id => {
+    const notSelected = this.state.checkedItems.filter(item => {
+      return item.id !== id;
+    });
+    this.setState({
+      checkedItems: notSelected
+    });
+  };
+
+  // function checking if item with *id* has checked checkbox
   isChecked = id => {
     return this.state.checkedItems.some(item => {
       return item.id === id;
     });
   };
 
+  // function toggling checkbox
   handleCheckedItems = e => {
     const { checkedItems } = this.state;
     const { eventData } = this.props;
 
     const clickedItemId = e.target.closest("li div[role='button']").id;
 
-    const removeFromCheckedItems = id => {
-      const notSelected = checkedItems.filter(item => {
-        return item.id !== id;
-      });
-      this.setState({
-        checkedItems: notSelected
-      });
-    };
-
+    // adds item of *id* from checkedItems state property
     const addToCheckedItems = id => {
       const addedItem = { id: id, ...eventData.list[id] };
-      this.setState({ checkedItems: [...checkedItems, addedItem] });
+      this.setState({
+        checkedItems: [...checkedItems, addedItem]
+      });
     };
-
+    // conditional toggling checkbox
     this.isChecked(clickedItemId)
-      ? removeFromCheckedItems(clickedItemId)
+      ? this.removeFromCheckedItems(clickedItemId)
       : addToCheckedItems(clickedItemId);
   };
 
+  // after submiting purchase in CheckOut component
+  // function clears property checkedItems of this component state
   clearCheckedItems = () => {
     this.setState({ checkedItems: [] });
   };
 
+  // renders main List
   renderList = () => {
     return Object.entries(this.props.eventData.list).map(item => {
       return (
@@ -107,8 +120,9 @@ class EventList extends React.Component {
     });
   };
 
+  // renders Card
   render() {
-    const { classes, eventData } = this.props;
+    const { classes, eventData, selectedEventData } = this.props;
     if (eventData.name) {
       return (
         <Card className={classes.root}>
@@ -131,7 +145,10 @@ class EventList extends React.Component {
               checkedItems={this.state.checkedItems}
               clearCheckedItems={this.clearCheckedItems}
             />
-            <AddItem eventData={eventData} />
+            <AddItem
+              eventData={eventData}
+              selectedEventData={selectedEventData}
+            />
           </CardActions>
         </Card>
       );
@@ -139,10 +156,4 @@ class EventList extends React.Component {
   }
 }
 
-export default compose(
-  withStyles(styles),
-  connect(
-    null,
-    { selectedEventData }
-  )
-)(EventList);
+export default withStyles(styles)(EventList);

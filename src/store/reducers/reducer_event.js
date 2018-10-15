@@ -1,4 +1,4 @@
-import { SELECTED_EVENT_DATA } from "../actions";
+import { SELECTED_EVENT_DATA } from "../actions/event";
 
 export default (state = {}, action) => {
   switch (action.type) {

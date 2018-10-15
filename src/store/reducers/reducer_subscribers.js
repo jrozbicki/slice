@@ -1,4 +1,4 @@
-import { SUBSCRIBERS_DATA } from "../actions";
+import { SUBSCRIBERS_DATA } from "../actions/event";
 
 export default (state = [], action) => {
   switch (action.type) {

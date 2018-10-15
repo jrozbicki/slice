@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { inviteFriendByEmail } from "../../store/actions";
+import { inviteFriendByEmail } from "../../store/actions/invite-user-to-event";
 
 import {
   IconButton,

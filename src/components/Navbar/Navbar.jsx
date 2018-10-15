@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core";
 import firebase from "../../firebase";
-import DrawerMenu from "./DrawerMenu";
+import DrawerMenu from "./Drawer/DrawerMenu";
 import EventSettings from "./EventSettings";
 
 import { styles } from "./navbar-styles";
