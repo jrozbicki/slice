@@ -46,7 +46,7 @@ class EventSettings extends Component {
   handleInvitationSubmit = () => {
     this.props.inviteFriendByEmail(
       this.state.emailValue,
-      this.props.eventData.id
+      this.props.selectedEventId
     );
     this.setState({ invitationDialogOpen: false });
   };
@@ -71,7 +71,7 @@ class EventSettings extends Component {
           onClose={this.handleEventSettingsClose}
         >
           <MenuItem
-            disabled={!this.props.eventData.id}
+            disabled={this.props.selectedEventId === ""}
             onClick={this.handleFriendInvitation}
           >
             Invite friend
@@ -116,7 +116,7 @@ class EventSettings extends Component {
 
 const mapStateToProps = state => {
   return {
-    eventData: state.eventData
+    selectedEventId: state.selectedEventId
   };
 };
 

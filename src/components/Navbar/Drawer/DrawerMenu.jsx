@@ -5,7 +5,11 @@ import { compose } from "recompose";
 import { connect } from "react-redux";
 
 import { userLogout } from "../../../store/actions/user";
-import { deleteEvent, selectedEventData } from "../../../store/actions/event";
+import {
+  deleteEvent,
+  selectedEventData,
+  selectedEventId
+} from "../../../store/actions/event";
 
 import AddEvent from "./AddEvent";
 
@@ -58,11 +62,12 @@ class DrawerMenu extends PureComponent {
   };
 
   loadEvent = e => {
-    this.props.selectedEventData(e.currentTarget.id);
+    this.props.selectedEventId(e.currentTarget.id);
     this.props.closeDrawer();
   };
 
   handleDeleteEvent = e => {
+    this.props.selectedEventId("");
     this.props.deleteEvent(
       this.props.events[e.currentTarget.id].users,
       this.props.userData.id,
@@ -175,6 +180,6 @@ export default compose(
   withRouter,
   connect(
     mapStateToProps,
-    { selectedEventData, deleteEvent, userLogout }
+    { selectedEventId, selectedEventData, deleteEvent, userLogout }
   )
 )(DrawerMenu);

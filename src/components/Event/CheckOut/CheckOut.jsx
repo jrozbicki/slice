@@ -3,7 +3,6 @@ import { compose } from "recompose";
 import { connect } from "react-redux";
 
 import firebase from "../../../firebase";
-import { selectedEventData } from "../../../store/actions/event";
 
 import {
   Dialog,
@@ -44,12 +43,7 @@ class CheckOut extends Component {
 
   // function that is responsible for submiting data do db
   handleCheckOutSubmit = () => {
-    const {
-      checkedItems,
-      currentUserData,
-      eventData,
-      selectedEventData
-    } = this.props;
+    const { checkedItems, currentUserData, eventData } = this.props;
 
     const { checkOutValue } = this.state;
 
@@ -126,8 +120,6 @@ class CheckOut extends Component {
       .ref()
       .update(updates);
 
-    // invoke pulling new data to redux
-    selectedEventData(eventData.id);
     // invoke clearing state in parent component
     this.props.clearCheckedItems();
     // close dialog and clear state
@@ -215,15 +207,11 @@ class CheckOut extends Component {
 // pulls data from
 const mapStateToProps = state => {
   return {
-    currentUserData: state.currentUserData,
-    eventData: state.eventData
+    currentUserData: state.currentUserData
   };
 };
 
 export default compose(
   withStyles(styles),
-  connect(
-    mapStateToProps,
-    { selectedEventData }
-  )
+  connect(mapStateToProps)
 )(CheckOut);

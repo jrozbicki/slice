@@ -1,6 +1,5 @@
 import React from "react";
 import { compose } from "recompose";
-import { connect } from "react-redux";
 
 import { withStyles } from "@material-ui/core";
 import { styles } from "./subscribers-style";
@@ -12,33 +11,21 @@ const Subscribers = props => {
 
   // iterates through all subscribers of current event and renders them
   const renderSubscribers = () => {
-    return subscribersData.map(subscriber => {
-      return (
-        <SingleSubscriber
-          key={subscriber.id}
-          eventData={eventData}
-          subscriber={subscriber}
-        />
-      );
-    });
+    if (subscribersData) {
+      return subscribersData.map(subscriber => {
+        return (
+          <SingleSubscriber
+            key={subscriber.id}
+            eventData={eventData}
+            subscriber={subscriber}
+          />
+        );
+      });
+    }
   };
 
   // only renders subscribers if there is event loaded
-  return (
-    <div className={classes.root}>
-      {eventData.name && subscribersData.length ? renderSubscribers() : null}
-    </div>
-  );
+  return <div className={classes.root}>{renderSubscribers()}</div>;
 };
 
-// pulling subscribers data from redux state
-const mapStateToProps = state => {
-  return {
-    subscribersData: state.subscribersData
-  };
-};
-
-export default compose(
-  connect(mapStateToProps),
-  withStyles(styles)
-)(Subscribers);
+export default compose(withStyles(styles))(Subscribers);
