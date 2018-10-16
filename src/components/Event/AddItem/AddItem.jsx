@@ -42,7 +42,7 @@ class AddItem extends Component {
 
   // handles submission item to List
   handleSubmit = () => {
-    const { selectedEventData, eventData } = this.props;
+    const { eventData } = this.props;
     const { itemName, itemQuantity } = this.state;
 
     // getting unique key from db
@@ -68,8 +68,6 @@ class AddItem extends Component {
       .ref()
       .update(updates);
 
-    // invoking selectedEventData to pull updated data to redux store
-    selectedEventData(eventData.id);
     // closes dialog
     this.handleDialogAddClose();
   };

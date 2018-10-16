@@ -6,6 +6,15 @@ export const DELETE_EVENT = "DELETE_EVENT";
 export const SELECTED_EVENT_DATA = "SELECTED_EVENT_DATA";
 export const SUBSCRIBERS_DATA = "SUBSCRIBERS_DATA";
 
+export const SELECTED_EVENT_ID = "SELECTED_EVENT_ID";
+
+export const selectedEventId = id => {
+  return {
+    type: SELECTED_EVENT_ID,
+    payload: id
+  };
+};
+
 export const addEvent = (userId, name) => {
   return dispatch => {
     const key = firebase

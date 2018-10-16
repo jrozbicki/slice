@@ -35,13 +35,12 @@ class EventList extends Component {
 
   // function removes item after clicking on thrash icon
   removeFromList = e => {
-    const { eventData, selectedEventData } = this.props;
+    const { eventData } = this.props;
     this.removeFromCheckedItems(e.currentTarget.id);
     firebase
       .database()
       .ref(`/events/${eventData.id}/list/${e.currentTarget.id}`)
       .remove();
-    selectedEventData(eventData.id);
   };
 
   // removes item of *id* from checkedItems state property
@@ -122,7 +121,7 @@ class EventList extends Component {
 
   // renders Card
   render() {
-    const { classes, eventData, selectedEventData } = this.props;
+    const { classes, eventData } = this.props;
     if (eventData.name) {
       return (
         <Card className={classes.root}>
@@ -143,12 +142,10 @@ class EventList extends Component {
           <CardActions className={classes.cardActions}>
             <CheckOut
               checkedItems={this.state.checkedItems}
+              eventData={eventData}
               clearCheckedItems={this.clearCheckedItems}
             />
-            <AddItem
-              eventData={eventData}
-              selectedEventData={selectedEventData}
-            />
+            <AddItem eventData={eventData} />
           </CardActions>
         </Card>
       );
