@@ -1,5 +1,18 @@
 import React, { Component } from "react";
-import _ from "lodash";
+
+import {
+  Typography,
+  List,
+  ListItem,
+  ExpansionPanel,
+  Avatar,
+  ExpansionPanelDetails,
+  withStyles
+} from "@material-ui/core";
+
+import { ArrowRightAlt, CreditCard } from "@material-ui/icons";
+import { StyledExpansionPanelSummary, styles } from "./checkoutevent-styles";
+
 class CheckOutEvent extends Component {
   // algorithm that is responsible to calculate needed transactions between users
   checkOutEventCalculator = () => {
@@ -10,7 +23,7 @@ class CheckOutEvent extends Component {
     console.log(eventTotal);
     const userCount = eventData.users.length;
     const eventAverage =
-      Math.floor(parseFloat(eventTotal / userCount) * 100) / 100;
+      Math.round(parseFloat(eventTotal / userCount) * 100) / 100;
 
     const summary = subscribersData.map(subscriber => {
       const { userTotal } = subscriber.events[eventId];
@@ -19,16 +32,14 @@ class CheckOutEvent extends Component {
         id: subscriber.id,
         name: subscriber.name,
         userTotal: parseFloat(userTotal).toFixed(2),
-        delta: Math.floor(delta * 100) / 100,
-        pending: Math.abs(Math.floor(delta * 100) / 100)
+        delta: Math.round(delta * 100) / 100,
+        pending: Math.abs(Math.round(delta * 100) / 100)
       };
     });
 
-    console.log("summary", summary);
-    console.log("sorted", _.sortBy(summary, ["delta"]));
-    console.log("event average", eventAverage);
     const onMinus = [];
     const onPlus = [];
+    // eslint-disable-next-line
     summary.map(subscriber => {
       if (subscriber.delta < 0) {
         onMinus.push(subscriber);
@@ -55,8 +66,8 @@ class CheckOutEvent extends Component {
           id: transactions.length + 1
         });
         subscribersAfter.push(plusBuffer);
-        if (minusBuffer.pending < 0.01) {
-          //minusBuffer.pending = 0;
+        if (minusBuffer.pending < 0.02) {
+          minusBuffer.pending = 0;
           subscribersAfter.push(minusBuffer);
         }
         plusBuffer = null;
@@ -72,23 +83,64 @@ class CheckOutEvent extends Component {
           id: transactions.length + 1
         });
         subscribersAfter.push(minusBuffer);
-        if (plusBuffer.pending < 0.01) {
-          //plusBuffer.pending = 0;
+        if (plusBuffer.pending < 0.02) {
+          plusBuffer.pending = 0;
           subscribersAfter.push(plusBuffer);
         }
         minusBuffer = null;
         minusBuffer = onMinus.shift();
       }
     }
-    console.log("transactions", transactions);
-    console.log("after", subscribersAfter);
 
-    return <div>CheckOutEvent</div>;
+    return transactions.map(transaction => {
+      const { classes } = this.props;
+      return (
+        <ExpansionPanel key={transaction.id}>
+          <StyledExpansionPanelSummary>
+            <div className={classes.singleTransaction}>
+              <div className={classes.avatarAndNick}>
+                <Avatar>{transaction.from.substr(0, 1)}</Avatar>
+                <Typography className={classes.heading}>
+                  {transaction.from}
+                </Typography>
+              </div>
+              <div className={classes.arrowIcon}>
+                <ArrowRightAlt />
+              </div>
+              <div className={classes.avatarAndNick}>
+                <Avatar>{transaction.to.substr(0, 1)}</Avatar>
+                <Typography className={classes.heading}>
+                  {transaction.to}
+                </Typography>
+              </div>
+              <Typography className={classes.transactionValue}>{`${
+                transaction.transactionValue
+              } zł`}</Typography>
+            </div>
+          </StyledExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <List className={classes.userPurchaseList}>
+              <ListItem className={classes.listItemDetails}>
+                <div>{`${transaction.to}  `}</div>
+                <CreditCard>acc</CreditCard>
+                <div>{`00 0000 0000 0000 0000 0000`}</div>
+              </ListItem>
+            </List>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      );
+    });
   };
 
   render() {
-    return <div>{this.checkOutEventCalculator()}</div>;
+    const { classes } = this.props;
+    return (
+      <div className={classes.root}>
+        <Typography variant="headline">Checkout</Typography>
+        {this.checkOutEventCalculator()}
+      </div>
+    );
   }
 }
 
-export default CheckOutEvent;
+export default withStyles(styles)(CheckOutEvent);
