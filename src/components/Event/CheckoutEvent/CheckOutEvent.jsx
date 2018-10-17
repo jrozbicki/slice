@@ -20,7 +20,6 @@ class CheckOutEvent extends Component {
     const eventId = eventData.id;
 
     const eventTotal = eventData.eventTotal;
-    console.log(eventTotal);
     const userCount = eventData.users.length;
     const eventAverage =
       Math.round(parseFloat(eventTotal / userCount) * 100) / 100;

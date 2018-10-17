@@ -13,7 +13,7 @@ export const styles = theme => ({
   },
   heading: {
     display: "flex",
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(16),
     fontWeight: theme.typography.fontWeightRegular,
     marginLeft: theme.spacing.unit,
     alignItems: "center"
@@ -36,7 +36,7 @@ export const styles = theme => ({
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(16),
     fontWeight: theme.typography.fontWeightRegular
   },
   accNumberContainer: {
@@ -50,11 +50,11 @@ export const styles = theme => ({
     fontWeight: theme.typography.fontWeightRegular
   },
   from: {
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(16),
     fontWeight: theme.typography.fontWeightRegular
   },
   to: {
-    fontSize: theme.typography.pxToRem(18),
+    fontSize: theme.typography.pxToRem(16),
     fontWeight: theme.typography.fontWeightRegular
   },
   avatarAndNick: {

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core";
+import { compose } from "recompose";
+import { connect } from "react-redux";
+
 import firebase from "../../firebase";
 import DrawerMenu from "./Drawer/DrawerMenu";
 import EventSettings from "./EventSettings";
-
-import { styles } from "./navbar-styles";
 
 import {
   AppBar,
@@ -12,16 +12,39 @@ import {
   IconButton,
   Hidden,
   Drawer,
-  SwipeableDrawer
+  SwipeableDrawer,
+  withStyles,
+  Typography
 } from "@material-ui/core";
 
+import { styles } from "./navbar-styles";
 import MenuIcon from "@material-ui/icons/Menu";
 
 class Navbar extends Component {
-  state = {
-    mobileOpen: false,
-    left: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      mobileOpen: false,
+      left: false,
+      eventName: ""
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.selectedEventId !== prevProps.selectedEventId) {
+      if (this.props.selectedEventId !== "") {
+        firebase
+          .database()
+          .ref(`/events/${this.props.selectedEventId}`)
+          .once("value")
+          .then(snap => {
+            this.setState({ eventName: snap.val().name });
+          });
+      } else {
+        this.setState({ eventName: "" });
+      }
+    }
+  }
 
   toggleDrawer = open => () => {
     this.setState({
@@ -55,6 +78,9 @@ class Navbar extends Component {
             >
               <MenuIcon />
             </IconButton>
+            <Typography className={classes.title}>
+              {this.state.eventName}
+            </Typography>
             <EventSettings />
           </Toolbar>
         </AppBar>
@@ -99,4 +125,11 @@ class Navbar extends Component {
   }
 }
 
-export default withStyles(styles)(Navbar);
+const mapStateToProps = state => {
+  return { selectedEventId: state.selectedEventId };
+};
+
+export default compose(
+  connect(mapStateToProps),
+  withStyles(styles)
+)(Navbar);
