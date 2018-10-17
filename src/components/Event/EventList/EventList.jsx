@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import firebase from "../../../firebase";
 
 import AddItem from "../AddItem/AddItem";
-import CheckOut from "../CheckOut/CheckOut";
+import CheckOutItem from "../CheckOutItem/CheckOutItem";
 import {
   Card,
   CardContent,
@@ -140,7 +140,7 @@ class EventList extends Component {
             </List>
           </CardContent>
           <CardActions className={classes.cardActions}>
-            <CheckOut
+            <CheckOutItem
               checkedItems={this.state.checkedItems}
               eventData={eventData}
               clearCheckedItems={this.clearCheckedItems}
