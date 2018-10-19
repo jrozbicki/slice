@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { compose } from "recompose";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { compose } from 'recompose';
+import { connect } from 'react-redux';
 
-import firebase from "../../firebase";
-import DrawerMenu from "./Drawer/DrawerMenu";
-import EventSettings from "./EventSettings";
+import firebase from '../../firebase';
+import DrawerMenu from './Drawer/DrawerMenu';
+import EventSettings from './EventSettings';
 
 import {
   AppBar,
@@ -14,11 +14,11 @@ import {
   Drawer,
   SwipeableDrawer,
   withStyles,
-  Typography
-} from "@material-ui/core";
+  Typography,
+} from '@material-ui/core';
 
-import { styles } from "./navbar-styles";
-import MenuIcon from "@material-ui/icons/Menu";
+import { styles } from './navbar-styles';
+import MenuIcon from '@material-ui/icons/Menu';
 
 class Navbar extends Component {
   constructor(props) {
@@ -26,29 +26,29 @@ class Navbar extends Component {
     this.state = {
       mobileOpen: false,
       left: false,
-      eventName: ""
+      eventName: '',
     };
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.selectedEventId !== prevProps.selectedEventId) {
-      if (this.props.selectedEventId !== "") {
+      if (this.props.selectedEventId !== '') {
         firebase
           .database()
           .ref(`/events/${this.props.selectedEventId}`)
-          .once("value")
+          .once('value')
           .then(snap => {
             this.setState({ eventName: snap.val().name });
           });
       } else {
-        this.setState({ eventName: "" });
+        this.setState({ eventName: '' });
       }
     }
   }
 
   toggleDrawer = open => () => {
     this.setState({
-      left: open
+      left: open,
     });
   };
 
@@ -58,9 +58,9 @@ class Navbar extends Component {
 
   handleLogOut = () => {
     firebase.auth().signOut();
-    sessionStorage.setItem("isLoggedIn", false);
-    sessionStorage.setItem("userData", null);
-    this.props.history.push("/login");
+    sessionStorage.setItem('isLoggedIn', false);
+    sessionStorage.setItem('userData', null);
+    this.props.history.push('/login');
   };
 
   render() {
@@ -126,10 +126,12 @@ class Navbar extends Component {
 }
 
 const mapStateToProps = state => {
-  return { selectedEventId: state.selectedEventId };
+  return {
+    selectedEventId: state.selectedEventId,
+  };
 };
 
 export default compose(
   connect(mapStateToProps),
-  withStyles(styles)
+  withStyles(styles),
 )(Navbar);
