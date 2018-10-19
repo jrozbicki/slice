@@ -1,8 +1,8 @@
-import React, { Component, Fragment } from "react";
-import { compose } from "recompose";
-import { connect } from "react-redux";
+import React, { Component, Fragment } from 'react';
+import { compose } from 'recompose';
+import { connect } from 'react-redux';
 
-import firebase from "../../../firebase";
+import firebase from '../../../firebase';
 
 import {
   Dialog,
@@ -14,11 +14,11 @@ import {
   InputAdornment,
   Input,
   List,
-  ListItem
-} from "@material-ui/core";
+  ListItem,
+} from '@material-ui/core';
 
-import { AttachMoney } from "@material-ui/icons";
-import { styles } from "./checkout-styles";
+import { AttachMoney } from '@material-ui/icons';
+import { styles } from './checkout-styles';
 
 // class component that renders Checkout Button and dialog
 class CheckOutItem extends Component {
@@ -27,7 +27,7 @@ class CheckOutItem extends Component {
 
     this.state = {
       dialogCheckOutOpen: false,
-      checkOutValue: ""
+      checkOutValue: '',
     };
   }
 
@@ -38,7 +38,7 @@ class CheckOutItem extends Component {
 
   // closes dialog and resets state
   handleDialogCheckOutClose = () => {
-    this.setState({ dialogCheckOutOpen: false, checkOutValue: "" });
+    this.setState({ dialogCheckOutOpen: false, checkOutValue: '' });
   };
 
   // function that is responsible for submiting data do db
@@ -58,9 +58,9 @@ class CheckOutItem extends Component {
     checkedItems.map(item => {
       return (items = {
         ...{
-          [item.id]: item
+          [item.id]: item,
         },
-        ...items
+        ...items,
       });
     });
 
@@ -73,9 +73,9 @@ class CheckOutItem extends Component {
     const updatedUser = {
       purchases: {
         [purchaseKey]: { items, price: parseFloat(checkOutValue) },
-        ...purchases
+        ...purchases,
       },
-      userTotal: parseFloat(updatedUserTotal).toFixed(2)
+      userTotal: parseFloat(updatedUserTotal).toFixed(2),
     };
 
     // prepare user updates
@@ -102,7 +102,7 @@ class CheckOutItem extends Component {
     updatedListArray.map(arr => {
       updatedList = {
         ...updatedList,
-        [arr[0]]: arr[1]
+        [arr[0]]: arr[1],
       };
     });
 
@@ -110,7 +110,7 @@ class CheckOutItem extends Component {
     updates[`/events/${eventData.id}`] = {
       ...eventData,
       list: updatedList,
-      eventTotal: parseFloat(updatedEventTotal).toFixed(2)
+      eventTotal: parseFloat(updatedEventTotal).toFixed(2),
     };
 
     // send updates
@@ -128,7 +128,7 @@ class CheckOutItem extends Component {
   // handles submitting purchase on enter press
   handleCheckOutSubmitOnEnter = e => {
     if (
-      e.key === "Enter" &&
+      e.key === 'Enter' &&
       this.state.checkOutValue > 0 &&
       this.props.checkedItems.length !== 0
     ) {
@@ -210,11 +210,11 @@ class CheckOutItem extends Component {
 // pulls data from
 const mapStateToProps = state => {
   return {
-    currentUserData: state.currentUserData
+    currentUserData: state.currentUserData,
   };
 };
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps)
+  connect(mapStateToProps),
 )(CheckOutItem);
