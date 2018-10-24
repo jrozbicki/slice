@@ -1,17 +1,17 @@
-import firebase from "../../firebase";
-import { currentUserEvents } from "./user";
+import firebase from '../../firebase';
+import { currentUserEvents } from './user';
 
-export const ADD_EVENT = "ADD_EVENT";
-export const DELETE_EVENT = "DELETE_EVENT";
-export const SELECTED_EVENT_DATA = "SELECTED_EVENT_DATA";
-export const SUBSCRIBERS_DATA = "SUBSCRIBERS_DATA";
+export const ADD_EVENT = 'ADD_EVENT';
+export const DELETE_EVENT = 'DELETE_EVENT';
+export const SELECTED_EVENT_DATA = 'SELECTED_EVENT_DATA';
+export const SUBSCRIBERS_DATA = 'SUBSCRIBERS_DATA';
 
-export const SELECTED_EVENT_ID = "SELECTED_EVENT_ID";
+export const SELECTED_EVENT_ID = 'SELECTED_EVENT_ID';
 
 export const selectedEventId = id => {
   return {
     type: SELECTED_EVENT_ID,
-    payload: id
+    payload: id,
   };
 };
 
@@ -26,12 +26,13 @@ export const addEvent = (userId, name) => {
       id: key,
       name: name,
       users: [userId],
-      eventTotal: 0
+      eventTotal: 0,
     };
 
     const userDataAboutEvent = {
       purchases: true,
-      userTotal: 0
+      userTotal: 0,
+      isEventAdmin: true,
     };
 
     let updates = {};
@@ -44,7 +45,7 @@ export const addEvent = (userId, name) => {
       .update(updates);
 
     return {
-      type: ADD_EVENT
+      type: ADD_EVENT,
     };
   };
 };
@@ -75,7 +76,7 @@ export const selectedEventData = id => {
     firebase
       .database()
       .ref(`/events/${id}`)
-      .once("value")
+      .once('value')
       .then(snap => {
         return snap.val();
       })
@@ -84,7 +85,7 @@ export const selectedEventData = id => {
           Object.assign(data, { id: id });
           dispatch({
             type: SELECTED_EVENT_DATA,
-            payload: data
+            payload: data,
           });
           dispatch(selectedEventSubscribersData(data.users));
         }
@@ -100,13 +101,13 @@ export const selectedEventSubscribersData = usersIdArray => {
           .database()
           .ref(`/users`)
           .child(userId)
-          .once("value")
+          .once('value')
           .then(snapshot => snapshot.val());
-      })
+      }),
     ).then(values => {
       dispatch({
         type: SUBSCRIBERS_DATA,
-        payload: values
+        payload: values,
       });
     });
   };

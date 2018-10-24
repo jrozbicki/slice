@@ -63,38 +63,73 @@ class EventSettings extends Component {
     this.handleEventSettingsClose();
   };
 
+  renderMenuButtons = () => {
+    const { user, selectedEventId } = this.props;
+    const { anchorEl } = this.state;
+    if (user.events) {
+      if (user.events[selectedEventId]) {
+        if (user.events[selectedEventId].isEventAdmin) {
+          return (
+            <Menu
+              id="settings-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={this.handleEventSettingsClose}
+            >
+              <MenuItem disabled={true} onClick={this.handleEventSettingsClose}>
+                Cash out
+              </MenuItem>
+              <MenuItem
+                disabled={selectedEventId === ''}
+                onClick={this.handleFriendInvitation}
+              >
+                Invite friend
+              </MenuItem>
+              <MenuItem
+                disabled={
+                  this.props.selectedEventId === this.props.user.defaultEventId
+                }
+                onClick={this.handleSettingAsDefault}
+              >
+                Set as default
+              </MenuItem>
+            </Menu>
+          );
+        } else {
+          return (
+            <Menu
+              id="settings-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={this.handleEventSettingsClose}
+            >
+              <MenuItem
+                disabled={
+                  this.props.selectedEventId === this.props.user.defaultEventId
+                }
+                onClick={this.handleSettingAsDefault}
+              >
+                Set as default
+              </MenuItem>
+            </Menu>
+          );
+        }
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  };
+
   render() {
-    const { anchorEl, emailValue, invitationDialogOpen } = this.state;
+    const { emailValue, invitationDialogOpen } = this.state;
     return (
       <Fragment>
         <IconButton color="inherit" onClick={this.handleEventSettingsClick}>
           <MoreVertIcon />
         </IconButton>
-        <Menu
-          id="settings-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={this.handleEventSettingsClose}
-        >
-          <MenuItem disabled={true} onClick={this.handleEventSettingsClose}>
-            Cash out
-          </MenuItem>
-          <MenuItem
-            disabled={this.props.selectedEventId === ''}
-            onClick={this.handleFriendInvitation}
-          >
-            Invite friend
-          </MenuItem>
-          <MenuItem
-            disabled={
-              this.props.selectedEventId === this.props.user.defaultEventId
-            }
-            onClick={this.handleSettingAsDefault}
-          >
-            Set as default
-          </MenuItem>
-        </Menu>
-
+        {this.renderMenuButtons()}
         <Dialog
           open={invitationDialogOpen}
           onClose={this.handleInvitationDialogClose}

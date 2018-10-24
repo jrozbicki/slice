@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 import {
   Typography,
@@ -7,11 +7,11 @@ import {
   ExpansionPanel,
   Avatar,
   ExpansionPanelDetails,
-  withStyles
-} from "@material-ui/core";
+  withStyles,
+} from '@material-ui/core';
 
-import { ArrowRightAlt, CreditCard } from "@material-ui/icons";
-import { StyledExpansionPanelSummary, styles } from "./checkoutevent-styles";
+import { ArrowRightAlt, CreditCard } from '@material-ui/icons';
+import { StyledExpansionPanelSummary, styles } from './checkoutevent-styles';
 
 class CheckOutEvent extends Component {
   // algorithm that is responsible to calculate needed transactions between users
@@ -32,7 +32,7 @@ class CheckOutEvent extends Component {
         name: subscriber.name,
         userTotal: parseFloat(userTotal).toFixed(2),
         delta: Math.round(delta * 100) / 100,
-        pending: Math.abs(Math.round(delta * 100) / 100)
+        pending: Math.abs(Math.round(delta * 100) / 100),
       };
     });
 
@@ -62,7 +62,7 @@ class CheckOutEvent extends Component {
           from: minusBuffer.name,
           to: plusBuffer.name,
           transactionValue: Math.ceil(transactionValue * 100) / 100,
-          id: transactions.length + 1
+          id: transactions.length + 1,
         });
         subscribersAfter.push(plusBuffer);
         if (minusBuffer.pending < 0.02) {
@@ -79,7 +79,7 @@ class CheckOutEvent extends Component {
           from: minusBuffer.name,
           to: plusBuffer.name,
           transactionValue: Math.ceil(transactionValue * 100) / 100,
-          id: transactions.length + 1
+          id: transactions.length + 1,
         });
         subscribersAfter.push(minusBuffer);
         if (plusBuffer.pending < 0.02) {
@@ -132,13 +132,17 @@ class CheckOutEvent extends Component {
   };
 
   render() {
-    const { classes } = this.props;
-    return (
-      <div className={classes.root}>
-        <Typography variant="headline">Checkout</Typography>
-        {this.checkOutEventCalculator()}
-      </div>
-    );
+    const { classes, eventData, subscribersData } = this.props;
+    if (eventData.eventTotal && subscribersData.length > 1) {
+      return (
+        <div className={classes.root}>
+          <Typography variant="headline">Checkout</Typography>
+          {this.checkOutEventCalculator()}
+        </div>
+      );
+    } else {
+      return null;
+    }
   }
 }
 

@@ -12,6 +12,7 @@ import {
 } from '../../../store/actions/event';
 
 import AddEvent from './AddEvent';
+import DeleteEvent from './DeleteEvent';
 
 import {
   ListItem,
@@ -23,7 +24,6 @@ import {
   Hidden,
   Collapse,
   ListItemSecondaryAction,
-  IconButton,
   withStyles,
 } from '@material-ui/core';
 
@@ -34,7 +34,6 @@ import {
   ExpandMore,
   Dns,
   Assignment,
-  Delete,
 } from '@material-ui/icons';
 
 import { styles } from './drawer-styles';
@@ -63,21 +62,12 @@ class DrawerMenu extends PureComponent {
 
   loadEvent = e => {
     this.props.selectedEventId(e.currentTarget.id);
-    this.props.closeDrawer();
-  };
-
-  handleDeleteEvent = e => {
-    this.props.selectedEventId('');
-    this.props.deleteEvent(
-      this.props.events[e.currentTarget.id].users,
-      this.props.userData.id,
-      e.currentTarget.id,
-    );
+    this.props.toggleDrawer(false);
   };
 
   // renders nested events list
   renderEvents = () => {
-    const { events } = this.props;
+    const { events, userData } = this.props;
     if (events) {
       return Object.keys(events).map(keyName => {
         return (
@@ -93,13 +83,11 @@ class DrawerMenu extends PureComponent {
             </ListItemIcon>
             <ListItemText inset primary={events[keyName].name} />
             <ListItemSecondaryAction>
-              <IconButton
-                id={keyName}
-                aria-label="Delete"
-                onClick={this.handleDeleteEvent}
-              >
-                <Delete />
-              </IconButton>
+              <DeleteEvent
+                userData={userData}
+                events={events}
+                keyName={keyName}
+              />
             </ListItemSecondaryAction>
           </ListItem>
         );

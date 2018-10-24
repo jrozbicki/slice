@@ -69,13 +69,14 @@ class CheckOutItem extends Component {
     const updatedUserTotal = parseFloat(userTotal) + parseFloat(checkOutValue);
 
     // set up updated user data
-    const { purchases } = currentUserData.events[eventData.id];
+    const { purchases, isEventAdmin } = currentUserData.events[eventData.id];
     const updatedUser = {
       purchases: {
         [purchaseKey]: { items, price: parseFloat(checkOutValue) },
         ...purchases,
       },
       userTotal: parseFloat(updatedUserTotal).toFixed(2),
+      isEventAdmin: isEventAdmin,
     };
 
     // prepare user updates

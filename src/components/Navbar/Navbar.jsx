@@ -25,7 +25,6 @@ class Navbar extends Component {
     super(props);
     this.state = {
       mobileOpen: false,
-      left: false,
       eventName: '',
     };
   }
@@ -38,7 +37,9 @@ class Navbar extends Component {
           .ref(`/events/${this.props.selectedEventId}`)
           .once('value')
           .then(snap => {
-            this.setState({ eventName: snap.val().name });
+            if (snap.val()) {
+              this.setState({ eventName: snap.val().name });
+            }
           });
       } else {
         this.setState({ eventName: '' });
@@ -48,7 +49,7 @@ class Navbar extends Component {
 
   toggleDrawer = open => () => {
     this.setState({
-      left: open,
+      mobileOpen: open,
     });
   };
 
@@ -73,7 +74,7 @@ class Navbar extends Component {
             <IconButton
               color="inherit"
               aria-label="Open drawer"
-              onClick={this.handleDrawerToggle}
+              onClick={this.toggleDrawer(true)}
               className={classes.navIconHide}
             >
               <MenuIcon />
@@ -86,6 +87,18 @@ class Navbar extends Component {
         </AppBar>
         <Hidden mdUp>
           <SwipeableDrawer
+            open={this.state.mobileOpen}
+            onClose={this.toggleDrawer(false)}
+            onOpen={this.toggleDrawer(true)}
+            ModalProps={
+              { keepMounted: true } // Better open performance on mobile.
+            }
+          >
+            <div tabIndex={0} role="button">
+              <DrawerMenu toggleDrawer={this.toggleDrawer(false)} />
+            </div>
+          </SwipeableDrawer>
+          {/* <SwipeableDrawer
             variant="temporary"
             open={this.state.mobileOpen}
             onClose={this.handleDrawerToggle}
@@ -104,7 +117,7 @@ class Navbar extends Component {
             >
               <DrawerMenu closeDrawer={this.handleDrawerToggle} />
             </div>
-          </SwipeableDrawer>
+          </SwipeableDrawer> */}
         </Hidden>
         <Hidden smDown implementation="css">
           <Drawer
