@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import firebase from "../../../firebase";
 
 import AddItem from "../AddItem/AddItem";
-import CheckOut from "../CheckOut/CheckOut";
+import CheckOutItem from "../CheckOutItem/CheckOutItem";
 import {
   Card,
   CardContent,
@@ -124,30 +124,33 @@ class EventList extends Component {
     const { classes, eventData } = this.props;
     if (eventData.name) {
       return (
-        <Card className={classes.root}>
-          <CardContent>
-            <Typography variant="display2" className={classes.cardTitle}>
+        <Fragment>
+          <Typography variant="headline">List</Typography>
+          <Card className={classes.root}>
+            <CardContent>
+              {/* <Typography variant="display2" className={classes.cardTitle}>
               {eventData.name}
-            </Typography>
-            <List>
-              {eventData.list ? (
-                this.renderList()
-              ) : (
-                <Typography variant="headline" className={classes.emptyList}>
-                  <div>Add some items to list</div>
-                </Typography>
-              )}
-            </List>
-          </CardContent>
-          <CardActions className={classes.cardActions}>
-            <CheckOut
-              checkedItems={this.state.checkedItems}
-              eventData={eventData}
-              clearCheckedItems={this.clearCheckedItems}
-            />
-            <AddItem eventData={eventData} />
-          </CardActions>
-        </Card>
+            </Typography> */}
+              <List>
+                {eventData.list ? (
+                  this.renderList()
+                ) : (
+                  <Typography variant="headline" className={classes.emptyList}>
+                    <div>Add some items to list</div>
+                  </Typography>
+                )}
+              </List>
+            </CardContent>
+            <CardActions className={classes.cardActions}>
+              <CheckOutItem
+                checkedItems={this.state.checkedItems}
+                eventData={eventData}
+                clearCheckedItems={this.clearCheckedItems}
+              />
+              <AddItem eventData={eventData} />
+            </CardActions>
+          </Card>
+        </Fragment>
       );
     }
   }

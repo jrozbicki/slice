@@ -1,10 +1,14 @@
-import React, { Component, Fragment } from "react";
-import { compose } from "recompose";
-import { connect } from "react-redux";
-import firebase from "../../firebase";
+import React, { Component, Fragment } from 'react';
+import { compose } from 'recompose';
+import { connect } from 'react-redux';
+import firebase from '../../firebase';
 
-import Subscribers from "./Subscribers/Subscribers";
-import EventList from "./EventList/EventList";
+import Subscribers from './Subscribers/Subscribers';
+import EventList from './EventList/EventList';
+import CheckOutEvent from './CheckoutEvent/CheckOutEvent';
+import { selectedEventId } from '../../store/actions/event';
+import { Typography, withStyles } from '@material-ui/core';
+import { styles } from './event-styles';
 
 // class component that renders event with list and subscribers data
 class Event extends Component {
@@ -13,40 +17,61 @@ class Event extends Component {
 
     this.state = {
       eventData: {},
-      subscribersData: []
+      subscribersData: [],
     };
   }
 
+  componentDidMount() {
+    if (this.props.user.defaultEventId !== '') {
+      this.props.selectedEventId(this.props.user.defaultEventId);
+    }
+  }
+
+  // if some event data gets updated (new item, checkouts)
   componentDidUpdate(prevProps) {
-    if (this.props.selectedEventId !== prevProps.selectedEventId) {
-      // if (prevProps.selectedEventId !== "") {
-      //   firebase
-      //     .database()
-      //     .ref(`/events/${prevProps.selectedEventId}`)
-      //     .off();
-      //
+    if (this.props.currentEventId !== prevProps.currentEventId) {
+      // detach event listener if visible event changes
+      if (prevProps.currentEventId !== '') {
+        firebase
+          .database()
+          .ref(`/events/${prevProps.currentEventId}`)
+          .off();
+      }
+
+      // setting up event listener for event changes
       firebase
         .database()
-        .ref(`/events/${this.props.selectedEventId}`)
-        .on("value", snap => {
-          if (snap.val().users) {
-            Promise.all(
-              snap.val().users.map(userId => {
-                return firebase
-                  .database()
-                  .ref(`/users/${userId}`)
-                  .once("value")
-                  .then(snapshot => snapshot.val());
-              })
-            ).then(data =>
-              this.setState({ eventData: snap.val(), subscribersData: data })
-            );
+        .ref(`/events/${this.props.currentEventId}`)
+        .on('value', snap => {
+          // in case of deletion etc.
+          if (!snap.val()) {
+            this.setState({ eventData: {}, subscribersData: [] });
+          } else {
+            // pulling subscribers data as promises
+            if (snap.val().users) {
+              Promise.all(
+                snap.val().users.map(userId => {
+                  return firebase
+                    .database()
+                    .ref(`/users/${userId}`)
+                    .once('value')
+                    .then(snapshot => snapshot.val());
+                }),
+              ).then(data =>
+                // resolves promises into array and triggers rerender
+                this.setState({
+                  eventData: snap.val(),
+                  subscribersData: data,
+                }),
+              );
+            }
           }
         });
     }
   }
 
   render() {
+    // render only if there is some event selected
     if (this.state.eventData.id) {
       return (
         <Fragment>
@@ -55,18 +80,32 @@ class Event extends Component {
             subscribersData={this.state.subscribersData}
             eventData={this.state.eventData}
           />
+          <CheckOutEvent
+            subscribersData={this.state.subscribersData}
+            eventData={this.state.eventData}
+          />
         </Fragment>
       );
     }
-    return null;
+    return (
+      <Typography variant="display2" className={this.props.classes.emptyList}>
+        <div>Select or add event!</div>
+      </Typography>
+    );
   }
 }
 
 // pulling event data from redux state
 const mapStateToProps = state => {
   return {
-    selectedEventId: state.selectedEventId
+    currentEventId: state.selectedEventId,
   };
 };
 
-export default compose(connect(mapStateToProps))(Event);
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    { selectedEventId },
+  ),
+)(Event);

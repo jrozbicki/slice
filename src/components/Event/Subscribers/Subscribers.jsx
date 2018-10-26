@@ -1,7 +1,7 @@
 import React from "react";
 import { compose } from "recompose";
 
-import { withStyles } from "@material-ui/core";
+import { withStyles, Typography } from "@material-ui/core";
 import { styles } from "./subscribers-style";
 import SingleSubscriber from "./SingleSubscriber/SingleSubscriber";
 
@@ -25,7 +25,12 @@ const Subscribers = props => {
   };
 
   // only renders subscribers if there is event loaded
-  return <div className={classes.root}>{renderSubscribers()}</div>;
+  return (
+    <div className={classes.root}>
+      <Typography variant="headline">Subscribers</Typography>
+      {renderSubscribers()}
+    </div>
+  );
 };
 
 export default compose(withStyles(styles))(Subscribers);

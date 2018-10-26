@@ -1,18 +1,19 @@
 export const styles = theme => ({
   button: {
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing.unit,
+    marginLeft: theme.spacing.unit,
   },
   dialogTitle: {
-    textAlign: "center"
+    textAlign: 'center',
   },
   dialogTextField: {
-    width: "100%"
+    width: '100%',
   },
   dialogCheckOutListItem: {
     paddingLeft: 0,
-    paddingRight: 0
+    paddingRight: 0,
   },
   dialogCheckOutList: {
-    marginBottom: 24
-  }
+    marginBottom: 24,
+  },
 });

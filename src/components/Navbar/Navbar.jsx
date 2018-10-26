@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { withStyles } from "@material-ui/core";
-import firebase from "../../firebase";
-import DrawerMenu from "./Drawer/DrawerMenu";
-import EventSettings from "./EventSettings";
+import React, { Component } from 'react';
+import { compose } from 'recompose';
+import { connect } from 'react-redux';
 
-import { styles } from "./navbar-styles";
+import firebase from '../../firebase';
+import DrawerMenu from './Drawer/DrawerMenu';
+import EventSettings from './EventSettings';
 
 import {
   AppBar,
@@ -12,20 +12,44 @@ import {
   IconButton,
   Hidden,
   Drawer,
-  SwipeableDrawer
-} from "@material-ui/core";
+  SwipeableDrawer,
+  withStyles,
+  Typography,
+} from '@material-ui/core';
 
-import MenuIcon from "@material-ui/icons/Menu";
+import { styles } from './navbar-styles';
+import MenuIcon from '@material-ui/icons/Menu';
 
 class Navbar extends Component {
-  state = {
-    mobileOpen: false,
-    left: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      mobileOpen: false,
+      eventName: '',
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.selectedEventId !== prevProps.selectedEventId) {
+      if (this.props.selectedEventId !== '') {
+        firebase
+          .database()
+          .ref(`/events/${this.props.selectedEventId}`)
+          .once('value')
+          .then(snap => {
+            if (snap.val()) {
+              this.setState({ eventName: snap.val().name });
+            }
+          });
+      } else {
+        this.setState({ eventName: '' });
+      }
+    }
+  }
 
   toggleDrawer = open => () => {
     this.setState({
-      left: open
+      mobileOpen: open,
     });
   };
 
@@ -35,9 +59,9 @@ class Navbar extends Component {
 
   handleLogOut = () => {
     firebase.auth().signOut();
-    sessionStorage.setItem("isLoggedIn", false);
-    sessionStorage.setItem("userData", null);
-    this.props.history.push("/login");
+    sessionStorage.setItem('isLoggedIn', false);
+    sessionStorage.setItem('userData', null);
+    this.props.history.push('/login');
   };
 
   render() {
@@ -50,16 +74,31 @@ class Navbar extends Component {
             <IconButton
               color="inherit"
               aria-label="Open drawer"
-              onClick={this.handleDrawerToggle}
+              onClick={this.toggleDrawer(true)}
               className={classes.navIconHide}
             >
               <MenuIcon />
             </IconButton>
+            <Typography className={classes.title}>
+              {this.state.eventName}
+            </Typography>
             <EventSettings />
           </Toolbar>
         </AppBar>
         <Hidden mdUp>
           <SwipeableDrawer
+            open={this.state.mobileOpen}
+            onClose={this.toggleDrawer(false)}
+            onOpen={this.toggleDrawer(true)}
+            ModalProps={
+              { keepMounted: true } // Better open performance on mobile.
+            }
+          >
+            <div tabIndex={0} role="button">
+              <DrawerMenu toggleDrawer={this.toggleDrawer(false)} />
+            </div>
+          </SwipeableDrawer>
+          {/* <SwipeableDrawer
             variant="temporary"
             open={this.state.mobileOpen}
             onClose={this.handleDrawerToggle}
@@ -78,7 +117,7 @@ class Navbar extends Component {
             >
               <DrawerMenu closeDrawer={this.handleDrawerToggle} />
             </div>
-          </SwipeableDrawer>
+          </SwipeableDrawer> */}
         </Hidden>
         <Hidden smDown implementation="css">
           <Drawer
@@ -99,4 +138,13 @@ class Navbar extends Component {
   }
 }
 
-export default withStyles(styles)(Navbar);
+const mapStateToProps = state => {
+  return {
+    selectedEventId: state.selectedEventId,
+  };
+};
+
+export default compose(
+  connect(mapStateToProps),
+  withStyles(styles),
+)(Navbar);

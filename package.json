@@ -25,6 +25,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.0.0",
     "@babel/preset-stage-1": "^7.0.0"
   }
 }

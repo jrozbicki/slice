@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from "react";
-import firebase from "../../../firebase";
+import React, { Component, Fragment } from 'react';
+import firebase from '../../../firebase';
 
-import { styles } from "./additem-styles";
+import { styles } from './additem-styles';
 import {
   withStyles,
   Dialog,
@@ -9,10 +9,10 @@ import {
   DialogContent,
   TextField,
   DialogActions,
-  Button
-} from "@material-ui/core";
+  Button,
+} from '@material-ui/core';
 
-import { Add } from "@material-ui/icons";
+import { Add } from '@material-ui/icons';
 
 // class component that renders Add button
 // and handles adding dialog and submittion
@@ -20,7 +20,7 @@ class AddItem extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { dialogAddOpen: false, itemName: "", itemQuantity: 1 };
+    this.state = { dialogAddOpen: false, itemName: '', itemQuantity: 1 };
   }
 
   // handle Add button click that opend dialog
@@ -30,12 +30,12 @@ class AddItem extends Component {
 
   // clears state during and closes dialog
   handleDialogAddClose = () => {
-    this.setState({ dialogAddOpen: false, itemName: "", itemQuantity: 1 });
+    this.setState({ dialogAddOpen: false, itemName: '', itemQuantity: 1 });
   };
 
   // handles on key press "enter" submission
   handleSubmitOnEnter = e => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       this.handleSubmit();
     }
   };
@@ -55,7 +55,7 @@ class AddItem extends Component {
     const item = {
       id: itemId,
       name: itemName,
-      quantity: itemQuantity
+      quantity: itemQuantity,
     };
 
     // setting up update object
@@ -79,7 +79,7 @@ class AddItem extends Component {
     return (
       <Fragment>
         <Button
-          className={this.props.classes.button}
+          className={classes.button}
           onClick={this.handleDialogAddOpen}
           variant="fab"
           color="secondary"
@@ -122,7 +122,7 @@ class AddItem extends Component {
           <DialogActions>
             <Button
               onClick={this.handleSubmit}
-              disabled={itemName === "" || itemQuantity < 1}
+              disabled={itemName === '' || itemQuantity < 1}
               color="primary"
             >
               ADD ITEM TO LIST

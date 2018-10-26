@@ -1,6 +1,7 @@
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
-import { inviteFriendByEmail } from "../../store/actions/invite-user-to-event";
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { inviteFriendByEmail } from '../../store/actions/invite-user-to-event';
+import { setEventAsDefault } from '../../store/actions/user';
 
 import {
   IconButton,
@@ -10,10 +11,10 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Button
-} from "@material-ui/core";
+  Button,
+} from '@material-ui/core';
 
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 class EventSettings extends Component {
   constructor(props) {
@@ -21,8 +22,8 @@ class EventSettings extends Component {
 
     this.state = {
       anchorEl: null,
-      emailValue: "",
-      invitationDialogOpen: false
+      emailValue: '',
+      invitationDialogOpen: false,
     };
   }
 
@@ -40,47 +41,95 @@ class EventSettings extends Component {
   };
 
   handleInvitationDialogClose = () => {
-    this.setState({ invitationDialogOpen: false, emailValue: "" });
+    this.setState({ invitationDialogOpen: false, emailValue: '' });
   };
 
   handleInvitationSubmit = () => {
     this.props.inviteFriendByEmail(
       this.state.emailValue,
-      this.props.selectedEventId
+      this.props.selectedEventId,
     );
     this.setState({ invitationDialogOpen: false });
   };
 
   handleSubmitOnEnter = e => {
-    if (e.key === "Enter" && this.state.emailValue) {
+    if (e.key === 'Enter' && this.state.emailValue) {
       this.handleInvitationSubmit();
     }
   };
 
+  handleSettingAsDefault = () => {
+    this.props.setEventAsDefault(this.props.user, this.props.selectedEventId);
+    this.handleEventSettingsClose();
+  };
+
+  renderMenuButtons = () => {
+    const { user, selectedEventId } = this.props;
+    const { anchorEl } = this.state;
+    if (user.events) {
+      if (user.events[selectedEventId]) {
+        if (user.events[selectedEventId].isEventAdmin) {
+          return (
+            <Menu
+              id="settings-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={this.handleEventSettingsClose}
+            >
+              <MenuItem disabled={true} onClick={this.handleEventSettingsClose}>
+                Cash out
+              </MenuItem>
+              <MenuItem
+                disabled={selectedEventId === ''}
+                onClick={this.handleFriendInvitation}
+              >
+                Invite friend
+              </MenuItem>
+              <MenuItem
+                disabled={
+                  this.props.selectedEventId === this.props.user.defaultEventId
+                }
+                onClick={this.handleSettingAsDefault}
+              >
+                Set as default
+              </MenuItem>
+            </Menu>
+          );
+        } else {
+          return (
+            <Menu
+              id="settings-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={this.handleEventSettingsClose}
+            >
+              <MenuItem
+                disabled={
+                  this.props.selectedEventId === this.props.user.defaultEventId
+                }
+                onClick={this.handleSettingAsDefault}
+              >
+                Set as default
+              </MenuItem>
+            </Menu>
+          );
+        }
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  };
+
   render() {
-    const { anchorEl, emailValue, invitationDialogOpen } = this.state;
+    const { emailValue, invitationDialogOpen } = this.state;
     return (
       <Fragment>
         <IconButton color="inherit" onClick={this.handleEventSettingsClick}>
           <MoreVertIcon />
         </IconButton>
-        <Menu
-          id="settings-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={this.handleEventSettingsClose}
-        >
-          <MenuItem
-            disabled={this.props.selectedEventId === ""}
-            onClick={this.handleFriendInvitation}
-          >
-            Invite friend
-          </MenuItem>
-          <MenuItem disabled={true} onClick={this.handleEventSettingsClose}>
-            Cash out
-          </MenuItem>
-        </Menu>
-
+        {this.renderMenuButtons()}
         <Dialog
           open={invitationDialogOpen}
           onClose={this.handleInvitationDialogClose}
@@ -116,11 +165,12 @@ class EventSettings extends Component {
 
 const mapStateToProps = state => {
   return {
-    selectedEventId: state.selectedEventId
+    selectedEventId: state.selectedEventId,
+    user: state.currentUserData,
   };
 };
 
 export default connect(
   mapStateToProps,
-  { inviteFriendByEmail }
+  { inviteFriendByEmail, setEventAsDefault },
 )(EventSettings);

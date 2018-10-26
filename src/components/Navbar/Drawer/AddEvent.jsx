@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from "react";
-import { compose } from "recompose";
-import { connect } from "react-redux";
-import { addEvent } from "../../../store/actions/event";
+import React, { Component, Fragment } from 'react';
+import { compose } from 'recompose';
+import { connect } from 'react-redux';
+import { addEvent } from '../../../store/actions/event';
 
 import {
   Dialog,
@@ -13,10 +13,10 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  withStyles
-} from "@material-ui/core";
-import { Add } from "@material-ui/icons";
-import { styles } from "./drawer-styles";
+  withStyles,
+} from '@material-ui/core';
+import { Add } from '@material-ui/icons';
+import { styles } from './drawer-styles';
 
 // class component that handle adding event
 class AddEvent extends Component {
@@ -25,7 +25,7 @@ class AddEvent extends Component {
 
     this.state = {
       dialogOpen: false,
-      eventName: ""
+      eventName: '',
     };
   }
 
@@ -37,8 +37,8 @@ class AddEvent extends Component {
   // is invoked when dialog is closing
   handleCloseDialog = () => {
     this.setState({
-      eventName: "",
-      dialogOpen: false
+      eventName: '',
+      dialogOpen: false,
     });
   };
 
@@ -50,7 +50,7 @@ class AddEvent extends Component {
 
   // handles submission on enter press
   handleEventSubmitOnEnter = e => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       this.handleEventSubmit();
     }
   };
@@ -96,7 +96,7 @@ class AddEvent extends Component {
           <DialogActions>
             <Button
               onClick={this.handleEventSubmit}
-              disabled={eventName === ""}
+              disabled={eventName === ''}
               color="primary"
             >
               ADD EVENT
@@ -112,6 +112,6 @@ export default compose(
   withStyles(styles),
   connect(
     null,
-    { addEvent }
-  )
+    { addEvent },
+  ),
 )(AddEvent);

@@ -1,14 +1,14 @@
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
-import Event from "../../components/Event/Event";
-import Navbar from "../../components/Navbar/Navbar";
-import { unsubscribeFirebase } from "../../store/actions";
-import { currentUserData, currentUserEvents } from "../../store/actions/user";
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import Event from '../../components/Event/Event';
+import Navbar from '../../components/Navbar/Navbar';
+import { unsubscribeFirebase } from '../../store/actions';
+import { currentUserData, currentUserEvents } from '../../store/actions/user';
 
 class Dashboard extends Component {
   // after mounting send user data to redux store
   componentDidMount() {
-    const user = JSON.parse(sessionStorage.getItem("userData"));
+    const user = JSON.parse(sessionStorage.getItem('userData'));
     this.props.currentUserData(user.uid);
     this.props.currentUserEvents(user.uid);
   }
@@ -20,17 +20,27 @@ class Dashboard extends Component {
 
   // render main components
   render() {
-    return (
-      <Fragment>
-        <Navbar history={this.props.history}>
-          <Event />
-        </Navbar>
-      </Fragment>
-    );
+    if (this.props.user.id) {
+      return (
+        <Fragment>
+          <Navbar history={this.props.history}>
+            <Event user={this.props.user} />
+          </Navbar>
+        </Fragment>
+      );
+    } else {
+      return null;
+    }
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    user: state.currentUserData,
+  };
+};
+
 export default connect(
-  null,
-  { currentUserData, currentUserEvents, unsubscribeFirebase }
+  mapStateToProps,
+  { currentUserData, currentUserEvents, unsubscribeFirebase },
 )(Dashboard);

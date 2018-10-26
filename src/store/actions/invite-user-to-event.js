@@ -1,23 +1,23 @@
-import firebase from "../../firebase";
+import firebase from '../../firebase';
 
-export const INVITE_FRIEND_TO_EVENT = "INVITE_FRIEND_TO_EVENT";
+export const INVITE_FRIEND_TO_EVENT = 'INVITE_FRIEND_TO_EVENT';
 
 const getUserDataByEmail = email => {
   return firebase
     .database()
-    .ref("/users")
-    .orderByChild("email")
+    .ref('/users')
+    .orderByChild('email')
     .equalTo(email)
-    .once("value")
+    .once('value')
     .then(snap => Object.entries(snap.val())[0][1]);
 };
 
 const getEventDataByEventId = eventId => {
   return firebase
     .database()
-    .ref("/events")
+    .ref('/events')
     .child(eventId)
-    .once("value")
+    .once('value')
     .then(snap => snap.val());
 };
 
@@ -30,8 +30,8 @@ const updateEventAndUser = (eventData, userData) => {
       ...userData,
       events: {
         ...userData.events,
-        [eventData.id]: { purchases: true, userTotal: 0 }
-      }
+        [eventData.id]: { purchases: true, userTotal: 0, isEventAdmin: false },
+      },
     };
     updates[`/users/${userData.id}`] = userData;
 
@@ -52,7 +52,7 @@ export const inviteFriendByEmail = (email, eventId) => {
       });
     });
     dispatch({
-      type: INVITE_FRIEND_TO_EVENT
+      type: INVITE_FRIEND_TO_EVENT,
     });
   };
 };
