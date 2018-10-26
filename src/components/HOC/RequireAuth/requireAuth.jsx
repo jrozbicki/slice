@@ -9,15 +9,15 @@ export default function requireAuth(Component) {
 
     checkAuth() {
       if (
-        sessionStorage.getItem("isLoggedIn") === "false" ||
-        sessionStorage.getItem("isLoggedIn") === null
+        localStorage.getItem("isLoggedIn") === "false" ||
+        localStorage.getItem("isLoggedIn") === null
       ) {
         this.props.history.push(`/login`);
       }
     }
 
     render() {
-      return sessionStorage.getItem("isLoggedIn") === "true" ? (
+      return localStorage.getItem("isLoggedIn") === "true" ? (
         <Component {...this.props} />
       ) : null;
     }

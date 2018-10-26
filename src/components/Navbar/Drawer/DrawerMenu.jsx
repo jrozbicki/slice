@@ -1,18 +1,18 @@
-import React, { PureComponent } from 'react';
-import firebase from '../../../firebase';
-import { withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-import { connect } from 'react-redux';
+import React, { PureComponent } from "react";
+import firebase from "../../../firebase";
+import { withRouter } from "react-router-dom";
+import { compose } from "recompose";
+import { connect } from "react-redux";
 
-import { userLogout } from '../../../store/actions/user';
+import { userLogout } from "../../../store/actions/user";
 import {
   deleteEvent,
   selectedEventData,
-  selectedEventId,
-} from '../../../store/actions/event';
+  selectedEventId
+} from "../../../store/actions/event";
 
-import AddEvent from './AddEvent';
-import DeleteEvent from './DeleteEvent';
+import AddEvent from "./AddEvent";
+import DeleteEvent from "./DeleteEvent";
 
 import {
   ListItem,
@@ -24,8 +24,8 @@ import {
   Hidden,
   Collapse,
   ListItemSecondaryAction,
-  withStyles,
-} from '@material-ui/core';
+  withStyles
+} from "@material-ui/core";
 
 import {
   Settings,
@@ -33,25 +33,25 @@ import {
   ExpandLess,
   ExpandMore,
   Dns,
-  Assignment,
-} from '@material-ui/icons';
+  Assignment
+} from "@material-ui/icons";
 
-import { styles } from './drawer-styles';
+import { styles } from "./drawer-styles";
 
 class DrawerMenu extends PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      eventsOpen: false,
+      eventsOpen: false
     };
   }
 
   handleLogOut = () => {
     firebase.auth().signOut();
-    sessionStorage.clear();
+    localStorage.clear();
     this.props.userLogout();
-    this.props.history.replace('/login');
+    this.props.history.replace("/login");
   };
 
   handleEventNestedList = () => {
@@ -107,9 +107,9 @@ class DrawerMenu extends PureComponent {
         <List>
           <ListItem>
             <Avatar>
-              {userData.email ? userData.email.substr(0, 1).toUpperCase() : ''}
+              {userData.email ? userData.email.substr(0, 1).toUpperCase() : ""}
             </Avatar>
-            <ListItemText primary={userData.email ? userData.email : ''} />
+            <ListItemText primary={userData.email ? userData.email : ""} />
           </ListItem>
         </List>
 
@@ -159,7 +159,7 @@ class DrawerMenu extends PureComponent {
 const mapStateToProps = state => {
   return {
     userData: state.currentUserData,
-    events: state.currentUserEvents,
+    events: state.currentUserEvents
   };
 };
 
@@ -168,6 +168,6 @@ export default compose(
   withRouter,
   connect(
     mapStateToProps,
-    { selectedEventId, selectedEventData, deleteEvent, userLogout },
-  ),
+    { selectedEventId, selectedEventData, deleteEvent, userLogout }
+  )
 )(DrawerMenu);

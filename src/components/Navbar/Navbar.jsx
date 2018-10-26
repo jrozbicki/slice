@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { compose } from 'recompose';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import { compose } from "recompose";
+import { connect } from "react-redux";
 
-import firebase from '../../firebase';
-import DrawerMenu from './Drawer/DrawerMenu';
-import EventSettings from './EventSettings';
+import firebase from "../../firebase";
+import DrawerMenu from "./Drawer/DrawerMenu";
+import EventSettings from "./EventSettings";
 
 import {
   AppBar,
@@ -14,42 +14,42 @@ import {
   Drawer,
   SwipeableDrawer,
   withStyles,
-  Typography,
-} from '@material-ui/core';
+  Typography
+} from "@material-ui/core";
 
-import { styles } from './navbar-styles';
-import MenuIcon from '@material-ui/icons/Menu';
+import { styles } from "./navbar-styles";
+import MenuIcon from "@material-ui/icons/Menu";
 
 class Navbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
       mobileOpen: false,
-      eventName: '',
+      eventName: ""
     };
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.selectedEventId !== prevProps.selectedEventId) {
-      if (this.props.selectedEventId !== '') {
+      if (this.props.selectedEventId !== "") {
         firebase
           .database()
           .ref(`/events/${this.props.selectedEventId}`)
-          .once('value')
+          .once("value")
           .then(snap => {
             if (snap.val()) {
               this.setState({ eventName: snap.val().name });
             }
           });
       } else {
-        this.setState({ eventName: '' });
+        this.setState({ eventName: "" });
       }
     }
   }
 
   toggleDrawer = open => () => {
     this.setState({
-      mobileOpen: open,
+      mobileOpen: open
     });
   };
 
@@ -57,12 +57,12 @@ class Navbar extends Component {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
-  handleLogOut = () => {
-    firebase.auth().signOut();
-    sessionStorage.setItem('isLoggedIn', false);
-    sessionStorage.setItem('userData', null);
-    this.props.history.push('/login');
-  };
+  // handleLogOut = () => {
+  //   firebase.auth().signOut();
+  //   localStorage.setItem("isLoggedIn", false);
+  //   localStorage.setItem("userData", null);
+  //   this.props.history.push("/login");
+  // };
 
   render() {
     const { classes, children } = this.props;
@@ -98,26 +98,6 @@ class Navbar extends Component {
               <DrawerMenu toggleDrawer={this.toggleDrawer(false)} />
             </div>
           </SwipeableDrawer>
-          {/* <SwipeableDrawer
-            variant="temporary"
-            open={this.state.mobileOpen}
-            onClose={this.handleDrawerToggle}
-            onOpen={this.toggleDrawer(true)}
-            classes={{ paper: classes.drawerPaper }}
-            ModalProps={
-              { keepMounted: true } // Better open performance on mobile.
-            }
-            hysteresis={0.3}
-          >
-            <div
-              tabIndex={0}
-              role="button"
-              onClick={this.toggleDrawer(false)}
-              onKeyDown={this.toggleDrawer(false)}
-            >
-              <DrawerMenu closeDrawer={this.handleDrawerToggle} />
-            </div>
-          </SwipeableDrawer> */}
         </Hidden>
         <Hidden smDown implementation="css">
           <Drawer
@@ -140,11 +120,11 @@ class Navbar extends Component {
 
 const mapStateToProps = state => {
   return {
-    selectedEventId: state.selectedEventId,
+    selectedEventId: state.selectedEventId
   };
 };
 
 export default compose(
   connect(mapStateToProps),
-  withStyles(styles),
+  withStyles(styles)
 )(Navbar);

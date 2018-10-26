@@ -36,6 +36,13 @@ ReactDOM.render(
             return <Redirect to="/login" />;
           }}
         />
+        <Route
+          exact
+          path="/index.html"
+          render={() => {
+            return <Redirect to="/login" />;
+          }}
+        />
       </Switch>
     </BrowserRouter>
   </Provider>,

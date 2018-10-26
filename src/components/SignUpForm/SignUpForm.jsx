@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import firebase from '../../firebase';
+import React, { Component } from "react";
+import firebase from "../../firebase";
 
 import {
   CssBaseline,
@@ -13,21 +13,21 @@ import {
   TextField,
   Snackbar,
   SnackbarContent,
-  IconButton,
-} from '@material-ui/core';
+  IconButton
+} from "@material-ui/core";
 
-import { Error, Close } from '@material-ui/icons';
+import { Error, Close } from "@material-ui/icons";
 
-import { SignupFormWrapper, styles } from './signupform-styles';
+import { SignupFormWrapper, styles } from "./signupform-styles";
 
 class SignUpForm extends Component {
   state = {
-    name: '',
-    email: '',
-    password: '',
-    passwordRepeat: '',
+    name: "",
+    email: "",
+    password: "",
+    passwordRepeat: "",
     openSnackbar: false,
-    errorMessage: 'Error',
+    errorMessage: "Error"
   };
 
   handleSignUp = () => {
@@ -39,11 +39,11 @@ class SignUpForm extends Component {
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        sessionStorage.setItem('isLoggedIn', true);
-        sessionStorage.setItem('userData', JSON.stringify(user));
+        localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("userData", JSON.stringify(user));
         firebase
           .database()
-          .ref('/users')
+          .ref("/users")
           .child(user.uid)
           .set({
             id: user.uid,
@@ -51,11 +51,11 @@ class SignUpForm extends Component {
             email: user.email,
             privilages: {
               admin: false,
-              user: true,
+              user: true
             },
-            defaultEventId: '',
+            defaultEventId: ""
           });
-        this.props.history.push('/');
+        this.props.history.push("/");
       }
     });
   };
@@ -65,10 +65,10 @@ class SignUpForm extends Component {
   };
 
   handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
-    this.setState({ errorMessage: '', openSnackbar: false });
+    this.setState({ errorMessage: "", openSnackbar: false });
   };
 
   render() {
@@ -149,8 +149,8 @@ class SignUpForm extends Component {
         </main>
         <Snackbar
           anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
+            vertical: "bottom",
+            horizontal: "center"
           }}
           open={this.state.openSnackbar}
           autoHideDuration={5000}
@@ -174,7 +174,7 @@ class SignUpForm extends Component {
                 onClick={this.handleSnackbarClose}
               >
                 <Close className={classes.icon} />
-              </IconButton>,
+              </IconButton>
             ]}
           />
         </Snackbar>

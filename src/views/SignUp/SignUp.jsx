@@ -2,7 +2,7 @@ import React from "react";
 import SignUpForm from "../../components/SignUpForm/SignUpForm";
 
 const SignUp = ({ history }) => {
-  if (sessionStorage.getItem("isLoggedIn") === "true") {
+  if (localStorage.getItem("isLoggedIn") === "true") {
     history.push("/");
     return null;
   } else {

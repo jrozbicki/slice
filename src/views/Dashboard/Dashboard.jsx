@@ -1,14 +1,14 @@
-import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
-import Event from '../../components/Event/Event';
-import Navbar from '../../components/Navbar/Navbar';
-import { unsubscribeFirebase } from '../../store/actions';
-import { currentUserData, currentUserEvents } from '../../store/actions/user';
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import Event from "../../components/Event/Event";
+import Navbar from "../../components/Navbar/Navbar";
+import { unsubscribeFirebase } from "../../store/actions";
+import { currentUserData, currentUserEvents } from "../../store/actions/user";
 
 class Dashboard extends Component {
   // after mounting send user data to redux store
   componentDidMount() {
-    const user = JSON.parse(sessionStorage.getItem('userData'));
+    const user = JSON.parse(localStorage.getItem("userData"));
     this.props.currentUserData(user.uid);
     this.props.currentUserEvents(user.uid);
   }
@@ -36,11 +36,11 @@ class Dashboard extends Component {
 
 const mapStateToProps = state => {
   return {
-    user: state.currentUserData,
+    user: state.currentUserData
   };
 };
 
 export default connect(
   mapStateToProps,
-  { currentUserData, currentUserEvents, unsubscribeFirebase },
+  { currentUserData, currentUserEvents, unsubscribeFirebase }
 )(Dashboard);
