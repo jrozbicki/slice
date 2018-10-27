@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import firebase from "../../firebase";
 import { compose } from "recompose";
 import { connect } from "react-redux";
-import { currentUserData, currentUserEvents } from "../../store/actions/user";
 
 import { LoginFormWrapper, styles } from "./loginform-styles";
 import Avatar from "@material-ui/core/Avatar";
@@ -113,10 +112,4 @@ LoginForm.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default compose(
-  withStyles(styles),
-  connect(
-    null,
-    { currentUserData, currentUserEvents }
-  )
-)(LoginForm);
+export default compose(withStyles(styles))(LoginForm);

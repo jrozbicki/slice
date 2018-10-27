@@ -30,25 +30,32 @@ class SignUpForm extends Component {
     errorMessage: "Error"
   };
 
+  componentWillUnmount() {
+    this.setState({
+      name: "",
+      email: "",
+      password: "",
+      passwordRepeat: "",
+      openSnackbar: false,
+      errorMessage: "Error"
+    });
+  }
+
   handleSignUp = () => {
     firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      //TODO: handle error with snackbar
-      .catch(err => this.handleSnackbarOpen(err.message));
-
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
+      .then(data => {
         localStorage.setItem("isLoggedIn", true);
-        localStorage.setItem("userData", JSON.stringify(user));
+        localStorage.setItem("userData", JSON.stringify(data.user));
         firebase
           .database()
           .ref("/users")
-          .child(user.uid)
+          .child(data.user.uid)
           .set({
-            id: user.uid,
+            id: data.user.uid,
             name: this.state.name,
-            email: user.email,
+            email: data.user.email,
             privilages: {
               admin: false,
               user: true
@@ -56,8 +63,8 @@ class SignUpForm extends Component {
             defaultEventId: ""
           });
         this.props.history.push("/");
-      }
-    });
+      })
+      .catch(err => this.handleSnackbarOpen(err.message));
   };
 
   handleSnackbarOpen = errorMessage => {
