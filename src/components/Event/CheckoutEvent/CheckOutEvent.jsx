@@ -7,7 +7,7 @@ import {
   ExpansionPanel,
   Avatar,
   ExpansionPanelDetails,
-  withStyles,
+  withStyles
 } from '@material-ui/core';
 
 import { ArrowRightAlt, CreditCard } from '@material-ui/icons';
@@ -32,7 +32,7 @@ class CheckOutEvent extends Component {
         name: subscriber.name,
         userTotal: parseFloat(userTotal).toFixed(2),
         delta: Math.round(delta * 100) / 100,
-        pending: Math.abs(Math.round(delta * 100) / 100),
+        pending: Math.abs(Math.round(delta * 100) / 100)
       };
     });
 
@@ -62,7 +62,7 @@ class CheckOutEvent extends Component {
           from: minusBuffer.name,
           to: plusBuffer.name,
           transactionValue: Math.ceil(transactionValue * 100) / 100,
-          id: transactions.length + 1,
+          id: transactions.length + 1
         });
         subscribersAfter.push(plusBuffer);
         if (minusBuffer.pending < 0.02) {
@@ -79,7 +79,7 @@ class CheckOutEvent extends Component {
           from: minusBuffer.name,
           to: plusBuffer.name,
           transactionValue: Math.ceil(transactionValue * 100) / 100,
-          id: transactions.length + 1,
+          id: transactions.length + 1
         });
         subscribersAfter.push(minusBuffer);
         if (plusBuffer.pending < 0.02) {

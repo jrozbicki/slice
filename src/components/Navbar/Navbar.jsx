@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { compose } from "recompose";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { compose } from 'recompose';
+import { connect } from 'react-redux';
 
-import firebase from "../../firebase";
-import DrawerMenu from "./Drawer/DrawerMenu";
-import EventSettings from "./EventSettings";
+import firebase from '../../firebase';
+import DrawerMenu from './Drawer/DrawerMenu';
+import EventSettings from './EventSettings';
 
 import {
   AppBar,
@@ -15,39 +15,39 @@ import {
   SwipeableDrawer,
   withStyles,
   Typography
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import { styles } from "./navbar-styles";
-import MenuIcon from "@material-ui/icons/Menu";
+import { styles } from './navbar-styles';
+import MenuIcon from '@material-ui/icons/Menu';
 
 class Navbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
       mobileOpen: false,
-      eventName: ""
+      eventName: ''
     };
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.selectedEventId !== prevProps.selectedEventId) {
-      if (this.props.selectedEventId !== "") {
+      if (this.props.selectedEventId !== '') {
         firebase
           .database()
           .ref(`/events/${this.props.selectedEventId}`)
-          .once("value")
+          .once('value')
           .then(snap => {
             if (snap.val()) {
               this.setState({ eventName: snap.val().name });
             }
           });
       } else {
-        this.setState({ eventName: "" });
+        this.setState({ eventName: '' });
       }
     }
   }
 
-  toggleDrawer = open => () => {
+  toggleDrawer = open => {
     this.setState({
       mobileOpen: open
     });
@@ -74,7 +74,7 @@ class Navbar extends Component {
             <IconButton
               color="inherit"
               aria-label="Open drawer"
-              onClick={this.toggleDrawer(true)}
+              onClick={() => this.toggleDrawer(true)}
               className={classes.navIconHide}
             >
               <MenuIcon />
@@ -88,14 +88,14 @@ class Navbar extends Component {
         <Hidden mdUp>
           <SwipeableDrawer
             open={this.state.mobileOpen}
-            onClose={this.toggleDrawer(false)}
-            onOpen={this.toggleDrawer(true)}
+            onClose={() => this.toggleDrawer(false)}
+            onOpen={() => this.toggleDrawer(true)}
             ModalProps={
               { keepMounted: true } // Better open performance on mobile.
             }
           >
             <div tabIndex={0} role="button">
-              <DrawerMenu toggleDrawer={this.toggleDrawer(false)} />
+              <DrawerMenu />
             </div>
           </SwipeableDrawer>
         </Hidden>
@@ -105,7 +105,7 @@ class Navbar extends Component {
             open
             classes={{ paper: classes.drawerPaper }}
           >
-            <DrawerMenu closeDrawer={this.handleDrawerToggle} />
+            <DrawerMenu />
           </Drawer>
         </Hidden>
 
