@@ -1,30 +1,29 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import firebase from "../../firebase";
-import { compose } from "recompose";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import firebase from '../../firebase';
+import { compose } from 'recompose';
 
-import { LoginFormWrapper, styles } from "./loginform-styles";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import LockIcon from "@material-ui/icons/LockOutlined";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { LoginFormWrapper, styles } from './loginform-styles';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import LockIcon from '@material-ui/icons/LockOutlined';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 class LoginForm extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { email: "", password: "" };
+    this.state = { email: '', password: '' };
   }
 
   componentWillUnmount() {
-    this.setState({ email: "", password: "" });
+    this.setState({ email: '', password: '' });
   }
 
   handleSignIn = () => {
@@ -34,15 +33,15 @@ class LoginForm extends Component {
       .catch(err => console.log(err.message));
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        localStorage.setItem("userData", JSON.stringify(user));
-        localStorage.setItem("isLoggedIn", true);
-        this.props.history.push("/");
+        localStorage.setItem('userData', JSON.stringify(user));
+        localStorage.setItem('isLoggedIn', true);
+        this.props.history.push('/');
       }
     });
   };
 
   handleSignUp = () => {
-    this.props.history.push("/signup");
+    this.props.history.push('/signup');
   };
 
   render() {
