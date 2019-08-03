@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import firebase from "../../firebase";
+import React, { Component } from 'react';
+import firebase from '../../firebase';
 
 import {
   CssBaseline,
@@ -14,30 +14,30 @@ import {
   Snackbar,
   SnackbarContent,
   IconButton
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import { Error, Close } from "@material-ui/icons";
+import { Error, Close } from '@material-ui/icons';
 
-import { SignupFormWrapper, styles } from "./signupform-styles";
+import { SignupFormWrapper, styles } from './signupform-styles';
 
 class SignUpForm extends Component {
   state = {
-    name: "",
-    email: "",
-    password: "",
-    passwordRepeat: "",
+    name: '',
+    email: '',
+    password: '',
+    passwordRepeat: '',
     openSnackbar: false,
-    errorMessage: "Error"
+    errorMessage: 'Error'
   };
 
   componentWillUnmount() {
     this.setState({
-      name: "",
-      email: "",
-      password: "",
-      passwordRepeat: "",
+      name: '',
+      email: '',
+      password: '',
+      passwordRepeat: '',
       openSnackbar: false,
-      errorMessage: "Error"
+      errorMessage: 'Error'
     });
   }
 
@@ -46,11 +46,11 @@ class SignUpForm extends Component {
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(data => {
-        localStorage.setItem("isLoggedIn", true);
-        localStorage.setItem("userData", JSON.stringify(data.user));
+        localStorage.setItem('isLoggedIn', true);
+        localStorage.setItem('userData', JSON.stringify(data.user));
         firebase
           .database()
-          .ref("/users")
+          .ref('/users')
           .child(data.user.uid)
           .set({
             id: data.user.uid,
@@ -60,9 +60,9 @@ class SignUpForm extends Component {
               admin: false,
               user: true
             },
-            defaultEventId: ""
+            defaultEventId: ''
           });
-        this.props.history.push("/");
+        this.props.history.push('/');
       })
       .catch(err => this.handleSnackbarOpen(err.message));
   };
@@ -72,10 +72,14 @@ class SignUpForm extends Component {
   };
 
   handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
-    this.setState({ errorMessage: "", openSnackbar: false });
+    this.setState({ errorMessage: '', openSnackbar: false });
+  };
+
+  handleGoBack = () => {
+    this.props.history.push('/login');
   };
 
   render() {
@@ -152,12 +156,22 @@ class SignUpForm extends Component {
                 Submit
               </Button>
             </form>
+            <Button
+              fullWidth
+              type="button"
+              variant="raised"
+              color="primary"
+              className={classes.back}
+              onClick={this.handleGoBack}
+            >
+              Back
+            </Button>
           </Paper>
         </main>
         <Snackbar
           anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center"
+            vertical: 'bottom',
+            horizontal: 'center'
           }}
           open={this.state.openSnackbar}
           autoHideDuration={5000}
