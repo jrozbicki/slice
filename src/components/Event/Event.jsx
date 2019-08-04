@@ -9,6 +9,7 @@ import CheckOutEvent from './CheckoutEvent/CheckOutEvent';
 import { selectedEventId } from '../../store/actions/event';
 import { Typography, withStyles } from '@material-ui/core';
 import { styles } from './event-styles';
+import { transactionsCalculator } from '../../utils/checkOut.js';
 
 // class component that renders event with list and subscribers data
 class Event extends Component {
@@ -18,6 +19,7 @@ class Event extends Component {
     this.state = {
       eventData: {},
       subscribersData: [],
+      transactions: []
     };
   }
 
@@ -45,7 +47,11 @@ class Event extends Component {
         .on('value', snap => {
           // in case of deletion etc.
           if (!snap.val()) {
-            this.setState({ eventData: {}, subscribersData: [] });
+            this.setState({
+              eventData: {},
+              subscribersData: [],
+              transactions: []
+            });
           } else {
             // pulling subscribers data as promises
             if (snap.val().users) {
@@ -56,13 +62,14 @@ class Event extends Component {
                     .ref(`/users/${userId}`)
                     .once('value')
                     .then(snapshot => snapshot.val());
-                }),
+                })
               ).then(data =>
                 // resolves promises into array and triggers rerender
                 this.setState({
                   eventData: snap.val(),
                   subscribersData: data,
-                }),
+                  transactions: transactionsCalculator(data, snap.val())
+                })
               );
             }
           }
@@ -71,19 +78,19 @@ class Event extends Component {
   }
 
   render() {
+    const { eventData, subscribersData, transactions } = this.state;
     // render only if there is some event selected
-    if (this.state.eventData.id) {
+    if (eventData.id) {
       return (
         <Fragment>
-          <EventList eventData={this.state.eventData} />
+          <EventList eventData={eventData} />
           <Subscribers
-            subscribersData={this.state.subscribersData}
-            eventData={this.state.eventData}
+            subscribersData={subscribersData}
+            eventData={eventData}
           />
-          <CheckOutEvent
-            subscribersData={this.state.subscribersData}
-            eventData={this.state.eventData}
-          />
+          {eventData.eventTotal && subscribersData.length > 1 ? (
+            <CheckOutEvent transactions={transactions} />
+          ) : null}
         </Fragment>
       );
     }
@@ -95,10 +102,9 @@ class Event extends Component {
   }
 }
 
-// pulling event data from redux state
 const mapStateToProps = state => {
   return {
-    currentEventId: state.selectedEventId,
+    currentEventId: state.selectedEventId
   };
 };
 
@@ -106,6 +112,6 @@ export default compose(
   withStyles(styles),
   connect(
     mapStateToProps,
-    { selectedEventId },
-  ),
+    { selectedEventId }
+  )
 )(Event);
