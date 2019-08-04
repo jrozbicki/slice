@@ -32,6 +32,7 @@ class LoginForm extends Component {
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .catch(err => console.log(err.message));
     firebase.auth().onAuthStateChanged(user => {
+      console.log(user);
       if (user) {
         localStorage.setItem('userData', JSON.stringify(user));
         localStorage.setItem('isLoggedIn', true);

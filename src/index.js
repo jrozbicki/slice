@@ -1,18 +1,21 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-import { applyMiddleware, createStore } from "redux";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { applyMiddleware, createStore } from 'redux';
+import { BrowserRouter, Switch } from 'react-router-dom';
 
-import "./styles/style.css";
-import registerServiceWorker from "./registerServiceWorker";
-import reducers from "./store/reducers";
-import Dashboard from "./views/Dashboard/Dashboard";
-import Login from "./views/Login/Login";
-import SignUp from "./views/SignUp/SignUp";
-import requireAuth from "./components/HOC/RequireAuth/requireAuth";
-import thunk from "redux-thunk";
-import logger from "redux-logger";
+import PublicRoute from './routes/PublicRoute';
+import PrivateRoute from './routes/PrivateRoute';
+
+import './styles/style.css';
+import registerServiceWorker from './registerServiceWorker';
+import reducers from './store/reducers';
+import Dashboard from './views/Dashboard/Dashboard';
+import Login from './views/Login/Login';
+import SignUp from './views/SignUp/SignUp';
+import Settings from './views/Settings';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 
 const createStoreWithMiddleware = applyMiddleware(thunk, logger)(createStore);
 
@@ -26,26 +29,14 @@ ReactDOM.render(
   >
     <BrowserRouter>
       <Switch>
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/signup" component={SignUp} />
-        <Route exact path="/" component={requireAuth(Dashboard)} />
-        <Route
-          exact
-          path="/"
-          render={() => {
-            return <Redirect to="/login" />;
-          }}
-        />
-        <Route
-          exact
-          path="/index.html"
-          render={() => {
-            return <Redirect to="/login" />;
-          }}
-        />
+        <PublicRoute exact path="/login" component={Login} />
+        <PublicRoute exact path="/signup" component={SignUp} />
+
+        <PrivateRoute exact path="/" component={Dashboard} />
+        <PrivateRoute exact path="/settings" component={Settings} />
       </Switch>
     </BrowserRouter>
   </Provider>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
 registerServiceWorker();

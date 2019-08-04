@@ -54,6 +54,10 @@ class DrawerMenu extends PureComponent {
     this.props.history.replace('/login');
   };
 
+  handleSettings = () => {
+    this.props.history.push('/settings');
+  };
+
   handleEventNestedList = () => {
     this.state.eventsOpen
       ? this.setState({ eventsOpen: false })
@@ -133,7 +137,7 @@ class DrawerMenu extends PureComponent {
         <Divider />
         {/* Settings and Logout */}
         <List>
-          <ListItem button disabled={true}>
+          <ListItem button onClick={this.handleSettings}>
             <ListItemIcon>
               <Settings />
             </ListItemIcon>
