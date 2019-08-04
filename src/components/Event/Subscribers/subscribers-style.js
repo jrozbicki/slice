@@ -1,50 +1,53 @@
-import { withStyles, ExpansionPanelSummary } from "@material-ui/core";
+import { withStyles, ExpansionPanelSummary } from '@material-ui/core';
 
 export const StyledExpansionPanelSummary = withStyles({
   content: {
-    justifyContent: "space-between"
+    justifyContent: 'space-between'
   }
 })(ExpansionPanelSummary);
 
 export const styles = theme => ({
   root: {
-    width: "100%"
+    width: '100%'
   },
   heading: {
-    display: "flex",
+    display: 'flex',
     fontSize: theme.typography.pxToRem(18),
     fontWeight: theme.typography.fontWeightRegular,
     marginLeft: theme.spacing.unit,
-    alignItems: "center"
+    alignItems: 'center'
   },
   summary: {
-    display: "flex",
-    justifyContent: "space-between"
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   avatarAndNick: {
-    display: "flex"
+    display: 'flex'
   },
   totalAmountDiv: {
-    display: "flex",
-    alignItems: "center",
-    "&:last-child": {
+    display: 'flex',
+    alignItems: 'center',
+    '&:last-child': {
       paddingRight: 0
     }
   },
   totalAmount: {
-    display: "flex",
-    alignItems: "center",
-    color: "green",
+    display: 'flex',
+    alignItems: 'center',
+    color: 'green',
     fontSize: theme.typography.pxToRem(18),
     fontWeight: theme.typography.fontWeightRegular
   },
   listFlex: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%"
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%'
   },
   userPurchaseList: {
-    width: "100%"
+    width: '100%'
+  },
+  button: {
+    margin: 4
   }
 });

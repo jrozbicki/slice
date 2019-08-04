@@ -11,7 +11,7 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Button,
+  Button
 } from '@material-ui/core';
 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -23,7 +23,7 @@ class EventSettings extends Component {
     this.state = {
       anchorEl: null,
       emailValue: '',
-      invitationDialogOpen: false,
+      invitationDialogOpen: false
     };
   }
 
@@ -47,7 +47,7 @@ class EventSettings extends Component {
   handleInvitationSubmit = () => {
     this.props.inviteFriendByEmail(
       this.state.emailValue,
-      this.props.selectedEventId,
+      this.props.selectedEventId
     );
     this.setState({ invitationDialogOpen: false });
   };
@@ -166,11 +166,11 @@ class EventSettings extends Component {
 const mapStateToProps = state => {
   return {
     selectedEventId: state.selectedEventId,
-    user: state.currentUserData,
+    user: state.currentUserData
   };
 };
 
 export default connect(
   mapStateToProps,
-  { inviteFriendByEmail, setEventAsDefault },
+  { inviteFriendByEmail, setEventAsDefault }
 )(EventSettings);

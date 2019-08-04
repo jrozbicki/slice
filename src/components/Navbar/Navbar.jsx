@@ -57,13 +57,6 @@ class Navbar extends Component {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
-  // handleLogOut = () => {
-  //   firebase.auth().signOut();
-  //   localStorage.setItem("isLoggedIn", false);
-  //   localStorage.setItem("userData", null);
-  //   this.props.history.push("/login");
-  // };
-
   render() {
     const { classes, children } = this.props;
 
@@ -82,7 +75,7 @@ class Navbar extends Component {
             <Typography className={classes.title}>
               {this.state.eventName}
             </Typography>
-            <EventSettings />
+            {/* <EventSettings /> */}
           </Toolbar>
         </AppBar>
         <Hidden mdUp>

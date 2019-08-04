@@ -30,8 +30,8 @@ const updateEventAndUser = (eventData, userData) => {
       ...userData,
       events: {
         ...userData.events,
-        [eventData.id]: { purchases: true, userTotal: 0, isEventAdmin: false },
-      },
+        [eventData.id]: { purchases: true, userTotal: 0, isEventAdmin: false }
+      }
     };
     updates[`/users/${userData.id}`] = userData;
 
@@ -52,7 +52,7 @@ export const inviteFriendByEmail = (email, eventId) => {
       });
     });
     dispatch({
-      type: INVITE_FRIEND_TO_EVENT,
+      type: INVITE_FRIEND_TO_EVENT
     });
   };
 };

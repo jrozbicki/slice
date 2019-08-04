@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment } from 'react';
 
 import {
   withStyles,
@@ -9,9 +9,9 @@ import {
   List,
   ListItem,
   Divider
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import { styles, StyledExpansionPanelSummary } from "../subscribers-style";
+import { styles, StyledExpansionPanelSummary } from './subscribers-style';
 
 const SingleSubscriber = props => {
   const { eventData, subscriber, classes } = props;
